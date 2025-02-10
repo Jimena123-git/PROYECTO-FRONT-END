@@ -1,6 +1,14 @@
 .card-title {
   font-family: 'Merriweather', serif;
-  font-weight: 700; /* Fuente en negrita */
-  font-size: 1.5rem; /* Tamaño del texto */
+  font-weight: 700;
+  font-size: 1.5rem; 
 }
 
+.highlight {
+  color: rgb(0, 0, 0) !important; 
+}
+
+.mensaje-exito {
+  color: #218838;
+  font-weight: bold;
+}

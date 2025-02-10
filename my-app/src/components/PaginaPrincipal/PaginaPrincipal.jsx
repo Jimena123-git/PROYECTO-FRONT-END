@@ -1,6 +1,7 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link } from 'react-router-dom'; //importa el componente Link de react-router-dom, que se usa para navegar entre páginas en una aplicación React sin recargar la página.
 import './PaginaPrincipal.css';
+import logo from '../../images/logodeGuardianesdelEntorno.png';
 
 const PaginaPrincipal = () => {
     return (
@@ -8,12 +9,12 @@ const PaginaPrincipal = () => {
         <header className="header">
           <nav className="navbar navbar-expand-lg">
             <div className="container-lg">
-              <img
+             <img
                 className="Logo"
                 id="logo"
-                src="/images/alcomix logo letra en negro png.webp"
-                alt="Logo de Alcomix"
-                aria-label="Logo de Alcomix"
+                src={logo}   
+                alt="Logo de Guardianes del Entorno"
+                aria-label="Logo de Guardianes del Entorno"
               />
               <button
                 className="navbar-toggler"
@@ -30,6 +31,7 @@ const PaginaPrincipal = () => {
                 <div className="navbar-nav">
                   <Link className="nav-link highlight" to="/">PAGINA PRINCIPAL</Link>
                   <Link className="nav-link" to="/registro">REGISTRO</Link>
+                  <Link className="nav-link" to="/areasnaturales">AREAS NATURALES</Link>
                 </div>
               </div>
             </div>
@@ -37,6 +39,32 @@ const PaginaPrincipal = () => {
         </header>
         
         <h1 className="titulo-principal">Guardianes del entorno</h1>
+
+        {/*Footer*/}
+        <footer>
+              <div class="footer-container">
+                <div class="footer-content">
+                <p>&copy; 2025 Guardianes del Entorno. Todos los derechos reservados.</p>
+                <div class="footer-links">
+                  <p>ABOUT US</p>
+                  <p>DELIVERY INFORMATION</p>
+                  <p>PRIVACITY POLICY</p>
+                  <p>TERMS & CONDITIONS</p>
+                </div>
+                <div className="redes-icons">
+                <a>
+                <i className="fab fa-facebook"></i>
+                </a>
+                <a >
+                <i className="fab fa-twitter"></i>
+                </a>
+                <a >
+                <i className="fab fa-instagram"></i>
+                </a>
+                </div>
+                </div>
+              </div>
+            </footer>
       </div>
     );
   };
