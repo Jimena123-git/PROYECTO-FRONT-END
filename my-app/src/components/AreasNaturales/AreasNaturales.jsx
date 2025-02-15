@@ -29,9 +29,10 @@ const AreasNaturales = () => {
                   </button>
                   <div className="collapse navbar-collapse" id="navbarNavAltMarkup">
                     <div className="navbar-nav">
-                      <Link className="nav-link" to="/">PAGINA PRINCIPAL</Link>
-                      <Link className="nav-link" to="/registro">REGISTRO</Link>
-                      <Link className="nav-link highlight" to="/areasnaturales">AREAS NATURALES</Link>
+                      <Link className="nav-link" to="/">Inicio</Link>
+                      <Link className="nav-link highlight" to="/areasnaturales">Areas Naturales</Link>
+                      <Link className="nav-link" to="/registro">Registrase</Link>
+                      <Link className="nav-link" to="/registro">Iniciar Sesion</Link>
                     </div>
                   </div>
                 </div>

@@ -29,9 +29,10 @@ const PaginaPrincipal = () => {
               </button>
               <div className="collapse navbar-collapse" id="navbarNavAltMarkup">
                 <div className="navbar-nav">
-                  <Link className="nav-link highlight" to="/">PAGINA PRINCIPAL</Link>
-                  <Link className="nav-link" to="/registro">REGISTRO</Link>
-                  <Link className="nav-link" to="/areasnaturales">AREAS NATURALES</Link>
+                  <Link className="nav-link highlight" to="/"></Link>
+                  <Link className="nav-link" to="/areasnaturales">Areas Naturales</Link>
+                  <Link className="nav-link" to="/registro">Registrase</Link>
+                  <Link className="nav-link" to="/registro">Iniciar Sesion</Link>
                 </div>
               </div>
             </div>

@@ -53,9 +53,10 @@ function Registro() {
             </button>
             <div className="collapse navbar-collapse" id="navbarNavAltMarkup">
               <div className="navbar-nav">
-                <Link className="nav-link" to="/">PAGINA PRINCIPAL</Link>
-                <Link className="nav-link highlight" to="/registro">REGISTRO</Link>
-                <Link className="nav-link" to="/areasnaturales">AREAS NATURALES</Link>
+                <Link className="nav-link" to="/">Inicio</Link>
+                <Link className="nav-link" to="/areasnaturales">Areas Naturales</Link>
+                <Link className="nav-link highlight" to="/registro">Registrase</Link>
+                <Link className="nav-link" to="/registro">Iniciar Sesion</Link>
               </div>
             </div>
           </div>
@@ -63,56 +64,61 @@ function Registro() {
       </header>
       
       {/* Formulario de Registro */}
-      <div className="container mt-4">
-        <div className="card" style={{ maxWidth: "500px", margin: "auto" }}>
-          <div className="card-body">
-            <h5 className="card-title text-center">REGISTRO</h5>
-            <form onSubmit={handleSubmit}>
-              <div className="mb-3">
-                <label htmlFor="usuario" className="form-label">Usuario:</label>
-                <input
-                  type="text"
-                  id="usuario"
-                  className="form-control"
-                  value={usuario}
-                  onChange={handleUsuarioChange}
-                  required
-                />
-              </div>
+      <section className="registro-section">
+        <div className="container">
+    <div className="registro-header">
+    <h2 class="tittle">Crear Cuenta</h2>
+      <p>Completa tus datos para crear tu cuenta y empezar a disfrutar de nuestros servicios.</p>
+    </div>
 
-              <div className="mb-3">
-                <label htmlFor="email" className="form-label">Email:</label>
-                <input
-                  type="email"
-                  id="email"
-                  className="form-control"
-                  value={email}
-                  onChange={handleEmailChange}
-                  required
-                />
-              </div>
+    <form className="registro-form" onSubmit={handleSubmit}>
+      <div className="mb-3">
+        <label htmlFor="usuario" className="form-label">Usuario:</label>
+        <input
+          type="text"
+          id="usuario"
+          className="form-control"
+          value={usuario}
+          onChange={handleUsuarioChange}
+          required
+        />
+      </div>
 
-              <div className="mb-3">
-                <label htmlFor="contraseña" className="form-label">Contraseña:</label>
-                <input
-                  type="password"
-                  id="contraseña"
-                  className="form-control"
-                  value={contraseña}
-                  onChange={handleContraseñaChange}
-                  required
-                />
-              </div>
+      <div className="mb-3">
+        <label htmlFor="email" className="form-label">Email:</label>
+        <input
+          type="email"
+          id="email"
+          className="form-control"
+          value={email}
+          onChange={handleEmailChange}
+          required
+        />
+      </div>
 
-              <button type="submit" className="btn btn-primary w-100">Registrarse</button>
-            </form>
+      <div className="mb-3">
+        <label htmlFor="contraseña" className="form-label">Contraseña:</label>
+        <input
+          type="password"
+          id="contraseña"
+          className="form-control"
+          value={contraseña}
+          onChange={handleContraseñaChange}
+          required
+        />
+      </div>
 
-            {/* Muestra un mensaje de comprobacion */}
-            {mensaje && <p className="mensaje-exito mt-3 text-center">{mensaje}</p>}
-            
-            </div>
-            </div>
-            </div>
+      <button type="submit" className="btn btn-crear-cuenta w-100">
+         Crear Cuenta
+      </button>
+
+    </form>
+
+    {/* Muestra un mensaje de comprobación */}
+    {mensaje && <p className="mensaje-exito text-center mt-3">{mensaje}</p>}
+  </div>
+</section>
+
             {/*Footer*/}
             <footer>
               <div class="footer-container">

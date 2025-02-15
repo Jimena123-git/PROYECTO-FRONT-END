@@ -8,7 +8,55 @@
   color: rgb(0, 0, 0) !important; 
 }
 
-.mensaje-exito {
-  color: #218838;
-  font-weight: bold;
+section {
+  width: 90%;
+  max-width: 1200px;
+  margin: auto;
+  padding: 40px 20px; /* Espaciado alrededor de la sección */
+  background-color: #fff; 
+  border-radius: 10px; 
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1); /* sombra alrededor de la seccion */
 }
+
+h2.tittle {
+  text-align: center;
+  margin-top: 2rem;
+  margin-bottom: 1rem;
+  font-family: 'Anton', sans-serif;
+  font-size: 2rem;
+   font-weight: bold;
+  color: #2C6B4F; 
+}
+
+section p {
+  font-size: 1.2rem;
+  color: #000000;
+  margin-bottom: 20px;
+  text-align: center;
+  font-family: 'Poppins', sans-serif;
+}
+
+.btn-crear-cuenta {
+  background-color: #2C6B4F !important; /* Verde oscuro */
+  border-color: #2C6B4F !important;
+  color: #ffffff !important; /* Texto blanco */
+  font-size: 1.1rem;
+  padding: 10px 15px;
+  border-radius: 5px;
+  transition: background-color 0.3s ease;
+}
+
+.btn-crear-cuenta:hover {
+  background-color: #218838 !important; /* Verde más vibrante en hover */
+  border-color: #218838 !important;
+}
+
+
+.mensaje-exito {
+  color: #000000 !important; /* Verde oscuro */
+  font-weight: bold;
+  text-align: center;
+  font-size: 1.1rem;
+}
+
+
