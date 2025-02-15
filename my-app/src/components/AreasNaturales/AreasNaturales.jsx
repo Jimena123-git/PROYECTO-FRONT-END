@@ -31,6 +31,7 @@ const AreasNaturales = () => {
                     <div className="navbar-nav">
                       <Link className="nav-link" to="/">Inicio</Link>
                       <Link className="nav-link highlight" to="/areasnaturales">Areas Naturales</Link>
+                      <Link className="nav-link highlight" to="/cargadedatos">Carga de Datos</Link>
                       <Link className="nav-link" to="/registro">Registrase</Link>
                       <Link className="nav-link" to="/registro">Iniciar Sesion</Link>
                     </div>

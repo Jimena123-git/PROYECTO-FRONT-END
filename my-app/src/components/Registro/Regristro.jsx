@@ -5,7 +5,6 @@ import logo from "../../images/logodeGuardianesdelEntorno.png";
 
 function Registro() { 
   const [usuario, setUsuario] = useState(""); // Estado para el usuario
-  const [email, setEmail] = useState(""); // Estado para el email
   const [contrasenia, setContrasenia] = useState(""); // Estado para la contraseña
   const [mensaje, setMensaje] = useState(""); // Estado para el mensaje de éxito
 

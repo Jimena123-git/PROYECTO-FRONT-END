@@ -30,6 +30,7 @@ const PaginaPrincipal = () => {
               <div className="collapse navbar-collapse" id="navbarNavAltMarkup">
                 <div className="navbar-nav">
                   <Link className="nav-link highlight" to="/"></Link>
+                  <Link className="nav-link" to="/cargadedatos">Carga de Datos</Link>
                   <Link className="nav-link" to="/areasnaturales">Areas Naturales</Link>
                   <Link className="nav-link" to="/registro">Registrase</Link>
                   <Link className="nav-link" to="/iniciarsesion">Iniciar Sesion</Link>
