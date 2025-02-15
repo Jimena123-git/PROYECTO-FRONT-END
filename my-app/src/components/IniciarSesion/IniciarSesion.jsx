@@ -1,13 +1,11 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import "./Registro.css";
+import "./IniciarSesion.css";
 import logo from "../../images/logodeGuardianesdelEntorno.png";
 
-function Registro() { 
+function IniciarSesion() {
   const [usuario, setUsuario] = useState(""); // Estado para el usuario
-  const [email, setEmail] = useState(""); // Estado para el email
   const [contrasenia, setContrasenia] = useState(""); // Estado para la contraseña
-  const [mensaje, setMensaje] = useState(""); // Estado para el mensaje de éxito
 
   // Manejo de cambios en los inputs
   const CambioValorUsuario = (evento) => {
@@ -18,10 +16,8 @@ function Registro() {
     setContrasenia(evento.target.value);
   };
 
-  // Manejo del formulario
   const handleSubmit = (evento) => {
     evento.preventDefault();
-    setMensaje(`El usuario fue registrado con éxito: ${usuario}`);
   };
 
   return (
@@ -53,20 +49,19 @@ function Registro() {
                 <Link className="nav-link" to="/">Inicio</Link>
                 <Link className="nav-link" to="/areasnaturales">Areas Naturales</Link>
                 <Link className="nav-link" to="/cargadedatos">Carga de Datos</Link>
-                <Link className="nav-link highlight" to="/registro">Registrarse</Link>
-                <Link className="nav-link" to="/iniciarsesion">Iniciar Sesion</Link>
+                <Link className="nav-link" to="/registro">Registrarse</Link>
+                <Link className="nav-link highlight" to="/iniciarsesion">Iniciar Sesión</Link>
               </div>
             </div>
           </div>
         </nav>
       </header>
-      
-      {/* Formulario de Registro */}
+
+      {/* Formulario de Inicio de Sesion */}
       <section className="registro-section">
         <div className="container">
     <div className="registro-header">
-    <h2 class="tittle">Crear Cuenta</h2>
-      <p>Completa tus datos para crear tu cuenta y empezar a disfrutar de nuestros servicios.</p>
+    <h2 class="tittle">Iniciar Sesión</h2>
     </div>
 
     <form className="registro-form" onSubmit={handleSubmit}>
@@ -95,14 +90,11 @@ function Registro() {
       </div>
 
       <button type="submit" className="btn btn-crear-cuenta w-100">
-         Crear Cuenta
+        Iniciar Sesion
       </button>
-
     </form>
-
-    {/* Muestra un mensaje de comprobación */}
-    {mensaje && <p className="mensaje-exito text-center mt-3">{mensaje}</p>}
-  </div>
+    
+    </div>
 </section>
 
             {/*Footer*/}
@@ -134,10 +126,4 @@ function Registro() {
   );
 };
 
-export default Registro;
-
-
-
-  
-
-
+export default IniciarSesion;

@@ -33,7 +33,7 @@ const CargaDeDatos = () => {
                       <Link className="nav-link" to="/areasnaturales">Areas Naturales</Link>
                       <Link className="nav-link highlight" to="/cargadedatos">Carga de Datos</Link>
                       <Link className="nav-link" to="/registro">Registrarse</Link>
-                      <Link className="nav-link" to="/inicio">Iniciar Sesion</Link>
+                      <Link className="nav-link" to="/iniciarsesion">Iniciar Sesion</Link>
                     </div>
                   </div>
                 </div>
