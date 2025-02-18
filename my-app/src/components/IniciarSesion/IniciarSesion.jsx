@@ -15,7 +15,7 @@ function IniciarSesion() {
   const CambioValorContrasenia = (evento) => {
     setContrasenia(evento.target.value);
   };
-
+  
   const handleSubmit = (evento) => {
     evento.preventDefault();
   };
@@ -95,7 +95,7 @@ function IniciarSesion() {
     </form>
     
     </div>
-</section>
+    </section>
 
             {/*Footer*/}
             <footer>

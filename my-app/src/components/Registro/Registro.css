@@ -37,9 +37,9 @@ section p {
 }
 
 .btn-crear-cuenta {
-  background-color: #2C6B4F !important; /* Verde oscuro */
+  background-color: #2C6B4F !important; 
   border-color: #2C6B4F !important;
-  color: #ffffff !important; /* Texto blanco */
+  color: #ffffff !important; 
   font-size: 1.1rem;
   padding: 10px 15px;
   border-radius: 5px;
@@ -47,13 +47,13 @@ section p {
 }
 
 .btn-crear-cuenta:hover {
-  background-color: #218838 !important; /* Verde más vibrante en hover */
+  background-color: #218838 !important; 
   border-color: #218838 !important;
 }
 
 
 .mensaje-exito {
-  color: #000000 !important; /* Verde oscuro */
+  color: #000000 !important; 
   font-weight: bold;
   text-align: center;
   font-size: 1.1rem;
