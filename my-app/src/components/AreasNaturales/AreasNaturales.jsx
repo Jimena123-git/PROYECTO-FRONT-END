@@ -13,7 +13,7 @@ const AreasNaturales = ({id}) => {
         setLoading(true);
         const response = await fetch(`https://mammal-excited-tarpon.ngrok-free.app/api/natural-area/list?userId=123&page=1&pageSize=10&id=${id}`, {
           headers: {
-            "ngrok-skip-browser-warning": "true" // Evita la advertencia de Ngrok
+            "ngrok-skip-browser-warning": "true" 
           }
         });
         
@@ -72,7 +72,7 @@ const AreasNaturales = ({id}) => {
         </nav>
       </header>
 
-      <h1 className="titulo-principal">Visualización de áreas naturales</h1>
+      <h1 className="titulo-principal">Visualización de areas naturales</h1>
       
       <div className="container">
         <div className="row justify-content-center">
