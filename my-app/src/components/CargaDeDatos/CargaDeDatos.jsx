@@ -126,32 +126,29 @@ const CargaDeDatos = () => {
       <header className="header">
         <nav className="navbar navbar-expand-lg">
           <div className="container-lg">
-            <img
-              className="Logo"
-              id="logo"
-              src={logo}
-              alt="Logo de Guardianes del Entorno"
-              aria-label="Logo de Guardianes del Entorno"
-            />
-            <button
-              className="navbar-toggler"
-              type="button"
-              data-bs-toggle="collapse"
-              data-bs-target="#navbarNavAltMarkup"
-              aria-controls="navbarNavAltMarkup"
-              aria-expanded="false"
-              aria-label="Toggle navigation"
-            >
-              <span className="navbar-toggler-icon"></span>
-            </button>
-            <div className="collapse navbar-collapse" id="navbarNavAltMarkup">
-              <div className="navbar-nav">
-                <Link className="nav-link" to="/">Inicio</Link>
-                <Link className="nav-link" to="/areasnaturales">Áreas Naturales</Link>
-                <Link className="nav-link highlight" to="/cargadedatos">Carga de Datos</Link>
-                <Link className="nav-link" to="/registro">Registrarse</Link>
-                <Link className="nav-link" to="/iniciarsesion">Iniciar Sesión</Link>
-              </div>
+            <div className="dropdown">
+              <button
+                className="btn btn-link dropdown-toggle p-0"
+                type="button"
+                id="logoDropdown"
+                data-bs-toggle="dropdown"
+                aria-expanded="false"
+              >
+                <img
+                  className="Logo"
+                  id="logo"
+                  src={logo}
+                  alt="Logo de Guardianes del Entorno"
+                  style={{ width: "50px", height: "50px" }} // Ajusta el tamaño según necesites
+                />
+              </button>
+              <ul className="dropdown-menu" aria-labelledby="logoDropdown">
+                <li><Link className="dropdown-item" to="/">Inicio</Link></li>
+                <li><Link className="dropdown-item" to="/areasnaturales">Áreas Naturales</Link></li>
+                <li><Link className="dropdown-item" to="/cargadedatos">Carga de Datos</Link></li>
+                <li><Link className="dropdown-item" to="/registro">Registrarse</Link></li>
+                <li><Link className="dropdown-item" to="/iniciarsesion">Iniciar Sesión</Link></li>
+              </ul>
             </div>
           </div>
         </nav>

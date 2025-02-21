@@ -65,153 +65,159 @@ useEffect(() => { // funcion para obtener las especies
 return (
     <div>
       <header className="header">
-        <nav className="navbar navbar-expand-lg">
-          <div className="container-lg">
-            <img className="Logo" id="logo" src={logo} alt="Logo de Guardianes del Entorno" />
-            <button
-              className="navbar-toggler"
-              type="button"
-              data-bs-toggle="collapse"
-              data-bs-target="#navbarNavAltMarkup"
-              aria-controls="navbarNavAltMarkup"
-              aria-expanded="false"
-              aria-label="Toggle navigation"
-            >
-              <span className="navbar-toggler-icon"></span>
-            </button>
-            <div className="collapse navbar-collapse" id="navbarNavAltMarkup">
-              <div className="navbar-nav">
-                <Link className="nav-link highlight" to="/">Inicio</Link>
-                <Link className="nav-link" to="/areasnaturales">Áreas Naturales</Link>
-                <Link className="nav-link" to="/cargadedatos">Carga de Datos</Link>
-                <Link className="nav-link" to="/registro">Registrarse</Link>
-                <Link className="nav-link" to="/iniciarsesion">Iniciar Sesión</Link>
-              </div>
-            </div>
-          </div>
-        </nav>
-      </header>
+  <nav className="navbar navbar-expand-lg">
+    <div className="container-lg">
+      <div className="dropdown">
+        <button
+          className="btn btn-link dropdown-toggle p-0"
+          type="button"
+          id="logoDropdown"
+          data-bs-toggle="dropdown"
+          aria-expanded="false"
+        >
+          <img
+            className="Logo"
+            id="logo"
+            src={logo}
+            alt="Logo de Guardianes del Entorno"
+            style={{ width: "50px", height: "50px" }} // Ajusta el tamaño según necesites
+          />
+        </button>
+        <ul className="dropdown-menu" aria-labelledby="logoDropdown">
+          <li><Link className="dropdown-item" to="/">Inicio</Link></li>
+          <li><Link className="dropdown-item" to="/areasnaturales">Áreas Naturales</Link></li>
+          <li><Link className="dropdown-item" to="/cargadedatos">Carga de Datos</Link></li>
+          <li><Link className="dropdown-item" to="/registro">Registrarse</Link></li>
+          <li><Link className="dropdown-item" to="/iniciarsesion">Iniciar Sesión</Link></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+</header>
+
+  
+      
 
       <h1 className="titulo-principal">Guardianes del entorno</h1>
       <div className="container mt-4">
       {/* Listado de las areas naturales */}
       <h2 className="subtitulo">Listado de Areas Naturales</h2>
       
-    {/*<div className="row justify-content-center"> 
-          {areas.map((area) => (
-            <div key={area.id} className="col-md-4">
-              <div className="card mb-3">
-                <img
-                  src={area.imageUrl}
-                  className="card-img-top"
-                  alt={area.name}
-                  style={{ height: '200px', objectFit: 'cover' }}
-                />
-                <div className="card-body">
-                  <h5 className="card-title">{area.name}</h5>
-                  <p className="card-text"><strong>Ubicación:</strong> {area.location}</p>
-                  <p className="card-text"><strong>Tipo de área:</strong> {area.areaType}</p>
-                  <p className="card-text"><strong>Región:</strong> {area.region}</p>
-                  <p className="card-text"><strong>Estado de conservación:</strong> {area.conservationStatus}</p>
-                  <p className="card-text"><strong>Descripción:</strong> {area.description}</p>
-                </div>
-                </div>
-            </div>
-          ))}
-        </div> */}
+    
 
-        <div id="carouselExampleCaptions" class="carousel slide">
-  <div class="carousel-indicators">
-    <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
-    <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="1" aria-label="Slide 2"></button>
-    <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="2" aria-label="Slide 3"></button>
+      <div id="carouselExampleCaptions" className="carousel slide" data-bs-ride="carousel">
+  <div className="carousel-container">
+    <div className="carousel-indicators">
+      {areas.map((_, index) => (
+        <button
+          key={index}
+          type="button"
+          data-bs-target="#carouselExampleCaptions"
+          data-bs-slide-to={index}
+          className={index === 0 ? "active" : ""}
+          aria-current={index === 0 ? "true" : "false"}
+          aria-label={`Slide ${index + 1}`}
+        ></button>
+      ))}
+    </div>
+
+    <div className="carousel-inner">
+      {areas.map((area, index) => (
+        <div
+          key={area.id}
+          className={`carousel-item ${index === 0 ? "active" : ""}`}
+        >
+          <div className="text-center">
+            <img
+              src={area.imageUrl}
+              className="d-block mx-auto"
+              alt={area.name}
+              style={{ height: "300px", width: "auto", objectFit: "cover" }}
+            />
+          </div>
+          <div className="p-3 text-center">
+            <h5><strong>{area.name}</strong></h5>
+            <p><strong>Ubicación:</strong> {area.location}</p>
+            <p><strong>Tipo de área:</strong> {area.areaType}</p>
+            <p><strong>Región:</strong> {area.region}</p>
+            <p><strong>Estado de conservación:</strong> {area.conservationStatus}</p>
+            <p>{area.description}</p>
+          </div>
+        </div>
+      ))}
+    </div>
   </div>
-  <div class="carousel-inner">
-    <div class="carousel-item active">
-      <img 
-      src={areas.imageUrl} className="card-img-top" alt={areas.name}
-      />
-      <div class="carousel-caption d-none d-md-block">
-        <h5>{areas.name}</h5>
-        <p>Some representative placeholder content for the first slide.</p>
-      </div>
-    </div>
-    <div class="carousel-item">
-      <img 
-      src="..." class="d-block w-100" alt="..."
-      />
-      <div class="carousel-caption d-none d-md-block">
-        <h5>Second slide label</h5>
-        <p>Some representative placeholder content for the second slide.</p>
-      </div>
-    </div>
-    <div class="carousel-item">
-      <img src="..." class="d-block w-100" alt="..."/>
-      <div class="carousel-caption d-none d-md-block">
-        <h5>Third slide label</h5>
-        <p>Some representative placeholder content for the third slide.</p>
-      </div>
-    </div>
-  </div>
-  <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide="prev">
-    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-    <span class="visually-hidden">Previous</span>
+
+  <button className="carousel-control-prev" type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide="prev">
+    <span className="carousel-control-prev-icon" aria-hidden="true"></span>
+    <span className="visually-hidden">Previous</span>
   </button>
-  <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide="next">
-    <span class="carousel-control-next-icon" aria-hidden="true"></span>
-    <span class="visually-hidden">Next</span>
+  <button className="carousel-control-next" type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide="next">
+    <span className="carousel-control-next-icon" aria-hidden="true"></span>
+    <span className="visually-hidden">Next</span>
   </button>
 </div>
-      
+
+
+
+    
       
 
-      {/* Listado de las especies*/}
-      <h2 className="subtitulo">Listado de Especies Avistadas</h2>
-      
-        <div className="row">
-          {species.map((specie) => (
-            <div key={specie.id} className="col-md-4">
-              <div className="card mb-3">
+    {/* Listado de Especies Avistadas */}
+    <h2 className="subtitulo">Listado de Especies Avistadas</h2>
+    <div id="speciesCarousel" className="carousel slide" data-bs-ride="carousel">
+      <div className="carousel-container">
+        <div className="carousel-indicators">
+          {species.map((_, index) => (
+            <button
+              key={index}
+              type="button"
+              data-bs-target="#speciesCarousel"
+              data-bs-slide-to={index}
+              className={index === 0 ? "active" : ""}
+              aria-current={index === 0 ? "true" : "false"}
+              aria-label={`Slide ${index + 1}`}
+            ></button>
+          ))}
+        </div>
+
+        <div className="carousel-inner">
+          {species.map((specie, index) => (
+            <div key={specie.id} className={`carousel-item ${index === 0 ? "active" : ""}`}>
+              <div className="text-center">
                 <img
                   src={specie.imageUrl}
-                  className="card-img-top"
+                  className="d-block mx-auto"
                   alt={specie.name}
-                  style={{ height: '200px', objectFit: 'cover' }}
+                  style={{ height: "300px", width: "auto", objectFit: "cover" }}
                 />
-                <div className="card-body">
-                  <h5 className="card-title">{specie.name}</h5>
-                  <p className="card-text"><strong>Nombre científico:</strong> {specie.scientificName}</p>
-                  <p className="card-text"><strong>Categoría:</strong> {specie.category}</p>
-                  <p className="card-text"><strong>Estado de conservación:</strong> {specie.conservationStatus}</p>
-                  <p className="card-text"><strong>Área natural:</strong> {specie.areaName}</p>
-                  <p className="card-text"><strong>Descripción:</strong> {specie.description}</p>
-                </div>
-                
+              </div>
+              <div className="p-3 text-center">
+                <h5><strong>{specie.name}</strong></h5>
+                <p><strong>Nombre científico:</strong> {specie.scientificName}</p>
+                <p><strong>Categoría:</strong> {specie.category}</p>
+                <p><strong>Estado de conservación:</strong> {specie.conservationStatus}</p>
+                <p><strong>Área natural:</strong> {specie.areaName}</p>
+                <p>{specie.description}</p>
               </div>
             </div>
           ))}
         </div>
-      
-
-      {/* Paginación para Especies */}
-      <div className="d-flex justify-content-between mt-3">
-        <button
-          className="btn btn-primary"
-          disabled={speciesPage === 1}
-          onClick={() => setSpeciesPage(speciesPage - 1)}
-        >
-          Anterior
-        </button>
-        <span>Página {speciesPage} de {speciesTotalPages}</span>
-        <button
-          className="btn btn-primary"
-          disabled={speciesPage === speciesTotalPages}
-          onClick={() => setSpeciesPage(speciesPage + 1)}
-        >
-          Siguiente
-        </button>
       </div>
+
+      <button className="carousel-control-prev" type="button" data-bs-target="#speciesCarousel" data-bs-slide="prev">
+        <span className="carousel-control-prev-icon" aria-hidden="true"></span>
+        <span className="visually-hidden">Previous</span>
+      </button>
+      <button className="carousel-control-next" type="button" data-bs-target="#speciesCarousel" data-bs-slide="next">
+        <span className="carousel-control-next-icon" aria-hidden="true"></span>
+        <span className="visually-hidden">Next</span>
+      </button>
     </div>
+    </div>
+
+     
+      
     
     {/* Footer */}
       <footer>
@@ -233,7 +239,7 @@ return (
         </div>
       </footer>
     </div>
-  );
+);
 };
 
 export default PaginaPrincipal;
