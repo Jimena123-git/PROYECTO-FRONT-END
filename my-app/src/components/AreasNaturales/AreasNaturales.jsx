@@ -17,6 +17,7 @@ const AreasNaturales = ({id}) => {
           }
         });
         
+        
         const data = await response.json(); // Esa línea de código transforma la respuesta de la API en un formato json que JavaScript puede usar fácilmente.
         console.log("Datos recibidos de la API:", data); 
         setAreas(data.items); // Aquí accedemos a la propiedad 'items' que contiene los datos de las áreas
@@ -99,14 +100,7 @@ const AreasNaturales = ({id}) => {
     ))}
   </div>
 </div>
-
-
-   
-
-
-
-
-      <footer>
+<footer>
         <div className="footer-container">
           <div className="footer-content">
             <p>&copy; 2025 Guardianes del Entorno. Todos los derechos reservados.</p>
