@@ -4,7 +4,8 @@ import Registro from "./components/Registro/Regristro";
 import PaginaPrincipal from './components/PaginaPrincipal/PaginaPrincipal';
 import AreasNaturales from './components/AreasNaturales/AreasNaturales';
 import IniciarSesion from './components/IniciarSesion/IniciarSesion';
-import CargaDeDatos from'./components/CargaDeDatos/CargaDeDatos';
+import ActividadesConservacion from './components/ActividadesConservacion/ActividadesConservacion';
+import EspeciesAvistadas from './components/EspeciesAvistadas/EspeciesAvistadas';
 
 
 function App() {
@@ -15,7 +16,8 @@ function App() {
         <Route path="/registro" element={<Registro />} />
         <Route path="/iniciarsesion" element={<IniciarSesion />} />
         <Route path="/areasnaturales" element={<AreasNaturales />} />
-        <Route path="/cargadedatos" element={<CargaDeDatos />} />
+        <Route path="/actividadesconservacion" element={<ActividadesConservacion />} />
+        <Route path="/especiesavistadas" element={<EspeciesAvistadas />} />
       </Routes>
     </Router>
   );

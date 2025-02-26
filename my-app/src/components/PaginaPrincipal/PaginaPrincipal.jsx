@@ -73,28 +73,7 @@ const PaginaPrincipal = () => {
     fetchEspecies();
   }, [speciesPage]);
 
-  // envio de comentario y puntuacion para las areas
-  const handleAreaCommentSubmit = (e) => {
-    e.preventDefault();
-    const newComment = {
-      rating: areaRating,
-      comment: areaComment,
-    };
-    setAreaComments([newComment, ...areaComments]);
-    setAreaComment('');
-  };
-
-  // envio de comentario y puntuacion para las espec
-  const handleSpeciesCommentSubmit = (e) => {
-    e.preventDefault();
-    const newComment = {
-      rating: speciesRating,
-      comment: speciesComment,
-    };
-    setSpeciesComments([newComment, ...speciesComments]);
-    setSpeciesComment('');
-  };
-
+  
   return (
     <div>
       <header className="header">
@@ -118,8 +97,9 @@ const PaginaPrincipal = () => {
               </button>
               <ul className="dropdown-menu" aria-labelledby="logoDropdown">
                 <li><Link className="dropdown-item" to="/">Inicio</Link></li>
-                <li><Link className="dropdown-item" to="/areasnaturales">Áreas Naturales</Link></li>
-                <li><Link className="dropdown-item" to="/cargadedatos">Carga de Datos</Link></li>
+                <li><Link className="dropdown-item" to="/areasnaturales">Areas Naturales</Link></li>
+                <li><Link className="dropdown-item" to="/espciesavistadas">Especies Avistadas</Link></li>
+                <li><Link className="dropdown-item" to="/actividadesconservacion">Actividades Conservacion</Link></li>
                 <li><Link className="dropdown-item" to="/registro">Registrarse</Link></li>
                 <li><Link className="dropdown-item" to="/iniciarsesion">Iniciar Sesión</Link></li>
               </ul>
@@ -182,45 +162,7 @@ const PaginaPrincipal = () => {
           </button>
         </div>
 
-        {/* Formulario para dejar comentarios y puntuación */}
-        <div className="comment-section">
-          <h5>Deja tu comentario y puntuación</h5>
-          <form onSubmit={handleAreaCommentSubmit}>
-            <div className="form-group">
-              <label htmlFor="areaRating">Puntuación</label>
-              <select
-                id="areaRating"
-                className="form-control"
-                value={areaRating}
-                onChange={(e) => setAreaRating(Number(e.target.value))}
-              >
-                {[1, 2, 3, 4, 5].map((rating) => (
-                  <option key={rating} value={rating}>{rating}</option>
-                ))}
-              </select>
-            </div>
-            <div className="form-group">
-              <label htmlFor="areaComment">Comentario</label>
-              <textarea
-                id="areaComment"
-                className="form-control"
-                rows="3"
-                value={areaComment}
-                onChange={(e) => setAreaComment(e.target.value)}
-              />
-            </div>
-            <button type="submit" className="btn btn-primary mt-2">Enviar</button>
-          </form>
-
-          <div className="comments-list">
-            {areaComments.map((comment, index) => (
-              <div key={index} className="comment">
-                <p><strong>Puntuación:</strong> {comment.rating}</p>
-                <p><strong>Comentario:</strong> {comment.comment}</p>
-              </div>
-            ))}
-          </div>
-        </div>
+        
 
         {/* Listado de Especies Avistadas */}
 <h2 className="subtitulo">Listado de Especies Avistadas</h2>
@@ -275,45 +217,7 @@ const PaginaPrincipal = () => {
 </div>
 
 
-        {/* Formulario para dejar comentarios y puntuación de especies */}
-        <div className="comment-section">
-          <h5>Deja tu comentario y puntuación sobre la especie</h5>
-          <form onSubmit={handleSpeciesCommentSubmit}>
-            <div className="form-group">
-              <label htmlFor="speciesRating">Puntuación</label>
-              <select
-                id="speciesRating"
-                className="form-control"
-                value={speciesRating}
-                onChange={(e) => setSpeciesRating(Number(e.target.value))}
-              >
-                {[1, 2, 3, 4, 5].map((rating) => (
-                  <option key={rating} value={rating}>{rating}</option>
-                ))}
-              </select>
-            </div>
-            <div className="form-group">
-              <label htmlFor="speciesComment">Comentario</label>
-              <textarea
-                id="speciesComment"
-                className="form-control"
-                rows="3"
-                value={speciesComment}
-                onChange={(e) => setSpeciesComment(e.target.value)}
-              />
-            </div>
-            <button type="submit" className="btn btn-primary mt-2">Enviar</button>
-          </form>
-
-          <div className="comments-list">
-            {speciesComments.map((comment, index) => (
-              <div key={index} className="comment">
-                <p><strong>Puntuación:</strong> {comment.rating}</p>
-                <p><strong>Comentario:</strong> {comment.comment}</p>
-              </div>
-            ))}
-          </div>
-        </div>
+        
         </div>
         <footer>
         <div className="footer-container">

@@ -1,125 +1,190 @@
-import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
-import logo from '../../images/logodeGuardianesdelEntorno.png';
-import './AreasNaturales.css';
+import React, { useState } from "react";
 
-const AreasNaturales = ({id}) => {
-  const [areas, setAreas] = useState([]);  
-  const [loading, setLoading] = useState(true);
+const AreasNaturales = () => {
+  const [mostrarFormulario, setMostrarFormulario] = useState(false);
+  const [nuevaArea, setNuevaArea] = useState({
+    name: "",
+    description: "",
+    location: "",
+    areaType: "",
+    region: "",
+    conservationStatus: "",
+    imageUrl: ""
+  });
+  const [areaAgregada, setAreaAgregada] = useState(null);
 
-  useEffect(() => {
-    const fetchAreas = async () => {
-      try {
-        setLoading(true);
-        const response = await fetch(`https://mammal-excited-tarpon.ngrok-free.app/api/natural-area/list?userId=123&page=1&pageSize=10&id=${id}`, {
-          headers: {
-            "ngrok-skip-browser-warning": "true" 
-          }
-        });
-        
-        
-        const data = await response.json(); // Esa línea de código transforma la respuesta de la API en un formato json que JavaScript puede usar fácilmente.
-        console.log("Datos recibidos de la API:", data); 
-        setAreas(data.items); // Aquí accedemos a la propiedad 'items' que contiene los datos de las áreas
-      } catch (error) {
-        console.error('Error fetching data:', error);
-        setLoading(false); // aca se detiene la carga si hay errores
-      } finally {
-        setLoading(false);
+  // Función para manejar los cambios en el formulario
+  const handleInputChange = (e) => {
+    setNuevaArea({
+      ...nuevaArea,
+      [e.target.name]: e.target.value
+    });
+  };
+
+  // Función para agregar un área utilizando la API
+  const agregarArea = async () => {
+    const areaNueva = {
+      userId: 1234,  // Este valor debe ser el ID del usuario logueado
+      naturalArea: {
+        name: nuevaArea.name,
+        location: nuevaArea.location,
+        areaType: nuevaArea.areaType,
+        region: nuevaArea.region,
+        conservationStatus: nuevaArea.conservationStatus,
+        description: nuevaArea.description,
+        imageUrl: nuevaArea.imageUrl
       }
     };
-
-    fetchAreas(); // La función fetchAreas hace una solicitud a la API para obtener los datos de las áreas naturales y luego los maneja o muestra en el componente.
-
-  }, [id]); // El [] en el useEffect asegura que el código dentro del efecto solo se ejecute una vez, cuando el componente se monta.
-
-  if (loading) {
-    return <p>Cargando áreas naturales...</p>;
-  }
+  
+    try {
+      const response = await fetch(
+        "https://mammal-excited-tarpon.ngrok-free.app/api/natural-area/insert?secret=TallerReact2025!",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "ngrok-skip-browser-warning": "true"
+          },
+          body: JSON.stringify(areaNueva)
+        }
+      );
+  
+      // Verificar si la respuesta es exitosa
+      if (response.ok) {
+        // Intentamos parsear la respuesta como JSON
+        const data = await response.json();
+        console.log("Respuesta de la API:", data);
+  
+        if (data.result) {
+          alert("Área agregada con éxito!");
+          setMostrarFormulario(false);
+        } else {
+          alert("Error desconocido al agregar el área.");
+        }
+      } else {
+        // Si la respuesta no es OK, obtenemos el error del cuerpo de la respuesta
+        const errorData = await response.text(); // Convertir la respuesta a texto en lugar de JSON
+        console.error("Error en la API:", errorData);
+        alert(`Error al agregar área: ${errorData}`);
+      }
+    } catch (error) {
+      console.error("Error en la solicitud:", error);
+  
+      if (error instanceof Error) {
+        alert(`Hubo un error al intentar agregar el área: ${error.message}`);
+      } else {
+        alert("Hubo un error al intentar agregar el área.");
+      }
+    }
+  };
+  
+  
 
   return (
     <div>
-      <header className="header">
-        <nav className="navbar navbar-expand-lg">
-          <div className="container-lg">
-            <div className="dropdown">
-              <button
-                className="btn btn-link dropdown-toggle p-0"
-                type="button"
-                id="logoDropdown"
-                data-bs-toggle="dropdown"
-                aria-expanded="false"
-              >
-                <img
-                  className="Logo"
-                  id="logo"
-                  src={logo}
-                  alt="Logo de Guardianes del Entorno"
-                  style={{ width: "50px", height: "50px" }} 
-                />
-              </button>
-              <ul className="dropdown-menu" aria-labelledby="logoDropdown">
-                <li><Link className="dropdown-item" to="/">Inicio</Link></li>
-                <li><Link className="dropdown-item" to="/areasnaturales">Áreas Naturales</Link></li>
-                <li><Link className="dropdown-item" to="/cargadedatos">Carga de Datos</Link></li>
-                <li><Link className="dropdown-item" to="/registro">Registrarse</Link></li>
-                <li><Link className="dropdown-item" to="/iniciarsesion">Iniciar Sesión</Link></li>
-              </ul>
-            </div>
-          </div>
-        </nav>
-      </header>
+      <h1>Visualización de áreas naturales</h1>
 
-      <h1 className="titulo-principal">Visualización de areas naturales</h1>
-      
-      <div className="container">
-        <div className="row justify-content-center">
-          {areas.map((area) => (
-            <div key={area.id} className="col-md-6 mb-4">
-              <div className="card" style={{ width: "100%" }}>
-                {area.imageUrl && (
-                  <img
-                  src={area.imageUrl}
-                  
-                  className="card-img-top"
-                  alt={area.name}
-                  style={{ height: "200px", objectFit: "cover" }}
-                  />
-                  
-          )}
-          <div className="card-body">
-            <h5 className="card-title">{area.name}</h5>
-            <p className="card-text">{area.description}</p>
-            <p><strong>Ubicación:</strong> {area.location}</p>
-            <p><strong>Tipo de área:</strong> {area.areaType}</p>
-            <p><strong>Región: </strong> {area.region}</p>
-            <p><strong>Estado de conservación:</strong> {area.conservationStatus}</p>
-          </div>
-        </div>
+      {/* Botón para mostrar el formulario */}
+      <div className="d-flex justify-content-center mb-3">
+        <button className="btn btn-success" onClick={() => setMostrarFormulario(true)}>
+          Agregar Nueva Área
+        </button>
       </div>
-    ))}
-  </div>
-</div>
-<footer>
-        <div className="footer-container">
-          <div className="footer-content">
-            <p>&copy; 2025 Guardianes del Entorno. Todos los derechos reservados.</p>
-            <div className="footer-links">
-              <p>ABOUT US</p>
-              <p>DELIVERY INFORMATION</p>
-              <p>PRIVACY POLICY</p>
-              <p>TERMS & CONDITIONS</p>
-            </div>
-            <div className="redes-icons">
-              <a><i className="fab fa-facebook"></i></a>
-              <a><i className="fab fa-twitter"></i></a>
-              <a><i className="fab fa-instagram"></i></a>
-            </div>
+
+      {/* Formulario de agregar área */}
+      {mostrarFormulario && (
+        <div className="container">
+          <div className="card p-3">
+            <h3>Agregar Nueva Área</h3>
+            <input
+              type="text"
+              name="name"
+              placeholder="Nombre"
+              className="form-control mb-2"
+              value={nuevaArea.name}
+              onChange={handleInputChange}
+            />
+            <input
+              type="text"
+              name="description"
+              placeholder="Descripción"
+              className="form-control mb-2"
+              value={nuevaArea.description}
+              onChange={handleInputChange}
+            />
+            <input
+              type="text"
+              name="location"
+              placeholder="Ubicación"
+              className="form-control mb-2"
+              value={nuevaArea.location}
+              onChange={handleInputChange}
+            />
+            <input
+              type="text"
+              name="areaType"
+              placeholder="Tipo de área"
+              className="form-control mb-2"
+              value={nuevaArea.areaType}
+              onChange={handleInputChange}
+            />
+            <input
+              type="text"
+              name="region"
+              placeholder="Región"
+              className="form-control mb-2"
+              value={nuevaArea.region}
+              onChange={handleInputChange}
+            />
+            <input
+              type="text"
+              name="conservationStatus"
+              placeholder="Estado de conservación"
+              className="form-control mb-2"
+              value={nuevaArea.conservationStatus}
+              onChange={handleInputChange}
+            />
+            <input
+              type="text"
+              name="imageUrl"
+              placeholder="URL de la imagen"
+              className="form-control mb-2"
+              value={nuevaArea.imageUrl}
+              onChange={handleInputChange}
+            />
+            {/* Botón para guardar el área */}
+            <button className="btn btn-success" onClick={agregarArea}>
+              Guardar Área
+            </button>
+            <button className="btn btn-secondary ms-2" onClick={() => setMostrarFormulario(false)}>
+              Cancelar
+            </button>
           </div>
         </div>
-      </footer>
+      )}
+
+      {/* Card para mostrar el área agregada */}
+      {areaAgregada && (
+        <div className="card mt-4" style={{ maxWidth: "18rem" }}>
+          <img src={areaAgregada.imageUrl} className="card-img-top" alt={areaAgregada.name} />
+          <div className="card-body">
+            <h5 className="card-title">{areaAgregada.name}</h5>
+            <p className="card-text">{areaAgregada.description}</p>
+            <p><strong>Ubicación:</strong> {areaAgregada.location}</p>
+            <p><strong>Tipo:</strong> {areaAgregada.areaType}</p>
+            <p><strong>Región:</strong> {areaAgregada.region}</p>
+            <p><strong>Estado de conservación:</strong> {areaAgregada.conservationStatus}</p>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
 
 export default AreasNaturales;
+
+
+
+
+
+

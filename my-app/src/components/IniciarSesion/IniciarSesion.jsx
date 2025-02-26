@@ -42,12 +42,13 @@ function IniciarSesion() {
                 />
               </button>
               <ul className="dropdown-menu" aria-labelledby="logoDropdown">
-                <li><Link className="dropdown-item" to="/">Inicio</Link></li>
-                <li><Link className="dropdown-item" to="/areasnaturales">Áreas Naturales</Link></li>
-                <li><Link className="dropdown-item" to="/cargadedatos">Carga de Datos</Link></li>
-                <li><Link className="dropdown-item" to="/registro">Registrarse</Link></li>
-                <li><Link className="dropdown-item" to="/iniciarsesion">Iniciar Sesión</Link></li>
-              </ul>
+                              <li><Link className="dropdown-item" to="/">Inicio</Link></li>
+                              <li><Link className="dropdown-item" to="/areasnaturales">Areas Naturales</Link></li>
+                              <li><Link className="dropdown-item" to="/espciesavistadas">Especies Avistadas</Link></li>
+                              <li><Link className="dropdown-item" to="/actividadesconservacion">Actividades Conservacion</Link></li>
+                              <li><Link className="dropdown-item" to="/registro">Registrarse</Link></li>
+                              <li><Link className="dropdown-item" to="/iniciarsesion">Iniciar Sesión</Link></li>
+             </ul>
             </div>
           </div>
         </nav>
