@@ -1,0 +1,109 @@
+body {
+    background-image: url("../../images/fotoRegistro.jpg");
+      margin: 0;
+      display: grid;
+      min-height: 100vh;
+      grid-template-rows: auto 1fr auto;
+  }
+  
+  .header {
+      max-width: 100%;
+      margin: auto;
+      padding: 0px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background-color: #384740;
+      font-family: 'Lora', sans-serif;
+      }
+    
+    .Logo {
+      max-width: 10rem; 
+      margin-right: 10px; 
+      margin-left: 0;
+      margin-top: 0px;
+    }
+    
+    /* esto oculta la flecha del dropdown */
+    .dropdown-toggle::after {
+      display: none !important;
+    }
+    
+    p {
+      font-size: 16px;
+    }
+
+/* Estilo para el formulario de comentario y puntuación */
+form {
+  background-color: rgba(255, 255, 255, 0.8); /* Fondo blanco semitransparente */
+  padding: 20px;
+  border-radius: 8px;
+  margin-top: 30px;
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+form .form-group {
+  margin-bottom: 15px;
+}
+
+form label {
+  font-size: 1rem;
+  font-weight: bold;
+  color: #384740;
+}
+
+form .form-control {
+  font-size: 1rem;
+  padding: 10px;
+  border-radius: 5px;
+  border: 1px solid #ddd;
+  width: 100%;
+}
+
+form .form-control:focus {
+  border-color: #384740;
+  outline: none;
+}
+
+form button {
+  background-color: #5a8f7d;
+  color: white;
+  font-weight: bold;
+  padding: 10px 20px;
+  border-radius: 5px;
+  border: none;
+  cursor: pointer;
+  width: 100%;
+  font-size: 1.1rem;
+}
+
+form button:hover {
+  background-color: #4c7e66;
+}
+
+form button[type="submit"] {
+  background-color: #5a8f7d;
+  color: white;
+  width: auto;
+  margin-top: 20px;
+}
+
+form button[type="submit"]:hover {
+  background-color: #4c7e66;
+}
+
+/* Estilos para el selector de puntuación */
+select.form-control {
+  font-size: 1rem;
+  padding: 10px;
+  border-radius: 5px;
+  border: 1px solid #ddd;
+  color: #384740;
+}
+
+textarea.form-control {
+  resize: vertical; /* Permitir que el textarea cambie de tamaño verticalmente */
+  min-height: 150px;
+}
