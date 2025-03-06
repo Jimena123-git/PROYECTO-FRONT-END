@@ -70,7 +70,7 @@ const EspeciesAvistadas = () => {
     });
   };
 
-  const handleCrearEspecie = async (e) => {
+  const CrearEspecie = async (e) => {
     e.preventDefault();
     setMensaje(""); 
     
@@ -116,12 +116,12 @@ const EspeciesAvistadas = () => {
     }
   };
 
-  const handleEditarEspecie = (especie) => {
+  const EditarEspecie = (especie) => {
     setNuevaEspecie(especie);
     setMostrarFormulario(true);
   };
 
-  const handleActualizarEspecie = async (e) => {
+  const ActualizarEspecie = async (e) => {
     e.preventDefault();
     setMensaje(""); 
     
@@ -159,6 +159,39 @@ const EspeciesAvistadas = () => {
       setMensaje("Error de conexión.");
     }
   };
+
+  const EliminarEspecie = async (id) => {
+    if (!usuarioLogueado || !usuarioLogueado.id) {
+      setMensaje("Error: Usuario no identificado.");
+      return;
+    }
+  
+    try {
+      const response = await fetch(
+        "https://mammal-excited-tarpon.ngrok-free.app/api/species/delete?secret=TallerReact2025!",
+        {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            userId: usuarioLogueado.id,
+            speciesId: id,
+          }),
+        }
+      );
+  
+      if (response.ok) {
+        setMensaje("¡Especie eliminada correctamente!");
+        setEspecies(especies.filter((especie) => especie.id !== id)); // Actualiza el estado eliminando la especie
+      } else {
+        setMensaje("Error al eliminar la especie.");
+      }
+    } catch (error) {
+      setMensaje("Error de conexión.");
+    }
+  };
+  
   
   // Filtro de especies basado en el searchTerm
   const especiesFiltradas = especies.filter((especie) =>
@@ -265,11 +298,11 @@ return (
             </div>
             <div className="d-flex justify-content-between">
               {nuevaEspecie.id ? (
-                <button className="btn btn-primary" onClick={handleActualizarEspecie}>
+                <button className="btn btn-primary" onClick={ActualizarEspecie}>
                   Actualizar
                 </button>
               ) : (
-                <button className="btn btn-success" onClick={handleCrearEspecie}>
+                <button className="btn btn-success" onClick={CrearEspecie}>
                   Agregar Especie
                 </button>
               )}
@@ -309,8 +342,11 @@ return (
                     </p>
                   <button
                   className="btn btn-warning"
-                  onClick={() => handleEditarEspecie(especie)}
+                  onClick={() => EditarEspecie(especie)}
                   > Editar
+                  </button>
+                  <button className="btn btn-danger" onClick={() => EliminarEspecie(especie.id)}>
+                    Eliminar
                   </button>
                 </div>
               </div>
