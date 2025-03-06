@@ -22,20 +22,18 @@ function IniciarSesion() {
   const handleSubmit = async (evento) => {
     evento.preventDefault();
 
-    // Verificar si los campos están vacíos
+    // verificar si los campos estan vacios
     if (!usuario || !contrasenia) {
       setError("Por favor, complete todos los campos.");
       return;
     }
-
-    // Limpiar errores anteriores
+    
     setError("");
     setMessage("");
 
     try {
       console.log("Enviando solicitud a la API...");
-
-      // Realizar la solicitud POST
+      
       const response = await fetch("https://mammal-excited-tarpon.ngrok-free.app/api/user/login?secret=TallerReact2025!", {
         method: "POST",
         headers: {
@@ -56,14 +54,12 @@ function IniciarSesion() {
       }
 
       const data = await response.json();
-      console.log("Datos de la API:", data); // Aquí se ve el contenido de la respuesta de la API
+      console.log("Datos de la API:", data); 
 
       if (data.isValid && data.user) {
         setMessage("¡Inicio de sesión exitoso!");
-
-        // Guardar en localStorage y redirigir
         localStorage.setItem("user", JSON.stringify(data.user));
-        navigate("/registro"); // Redirigir al home después del login
+        navigate("/registro"); 
       } else {
         setError("Datos incorrectos");
       }
@@ -91,14 +87,14 @@ function IniciarSesion() {
                   id="logo"
                   src={logo}
                   alt="Logo de Guardianes del Entorno"
-                  style={{ width: "50px", height: "50px" }} // Ajusta el tamaño según necesites
+                  style={{ width: "50px", height: "50px" }} 
                 />
               </button>
               <ul className="dropdown-menu" aria-labelledby="logoDropdown">
                 <li><Link className="dropdown-item" to="/">Inicio</Link></li>
-                <li><Link className="dropdown-item" to="/areasnaturales">Areas Naturales</Link></li>
-                <li><Link className="dropdown-item" to="/espciesavistadas">Especies Avistadas</Link></li>
-                <li><Link className="dropdown-item" to="/actividadesconservacion">Actividades Conservacion</Link></li>
+                <li><Link className="dropdown-item" to="/areasnaturales">Áreas Naturales</Link></li>
+                <li><Link className="dropdown-item" to="/especiesavistadas">Especies Avistadas</Link></li>
+                <li><Link className="dropdown-item" to="/actividadesconservacion">Actividades Conservación</Link></li>
                 <li><Link className="dropdown-item" to="/registro">Registrarse</Link></li>
                 <li><Link className="dropdown-item" to="/iniciarsesion">Iniciar Sesion</Link></li>
               </ul>
@@ -113,9 +109,6 @@ function IniciarSesion() {
           <div className="registro-header">
             <h2 className="tittle">Iniciar Sesión</h2>
           </div>
-
-          
-
           <form className="registro-form" onSubmit={handleSubmit}>
             <div className="mb-3">
               <label htmlFor="usuario" className="form-label">Usuario:</label>
@@ -142,7 +135,7 @@ function IniciarSesion() {
             </div>
 
             {error && <div className="alert alert-danger">{error}</div>} {/* Mostrar errores */}
-          {message && <div className="alert alert-success">{message}</div>} {/* Mostrar mensaje de éxito */}
+            {message && <div className="alert alert-success">{message}</div>} {/* Mostrar mensaje de éxito */}
 
             <button type="submit" className="btn btn-crear-cuenta w-100">
               Iniciar Sesion

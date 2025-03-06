@@ -94,7 +94,7 @@ form button[type="submit"]:hover {
   background-color: #4c7e66;
 }
 
-/* Estilos para el selector de puntuación */
+/* Estilos para el selector de puntuacion */
 select.form-control {
   font-size: 1rem;
   padding: 10px;
@@ -104,6 +104,6 @@ select.form-control {
 }
 
 textarea.form-control {
-  resize: vertical; /* Permitir que el textarea cambie de tamaño verticalmente */
+  resize: vertical; 
   min-height: 150px;
 }

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Link } from 'react-router-dom';
 import logo from '../../images/logodeGuardianesdelEntorno.png';
 import './AreasNaturales.css';
+import Mapa from '../Mapa';
 
 const AreasNaturales = () => {
   const [loading, setLoading] = useState(true);
@@ -19,6 +20,50 @@ const AreasNaturales = () => {
 
   const [usuarioLogueado, setUsuarioLogueado] = useState(null);
   const [areas, setAreas] = useState([]);
+  const [searchTerm, setSearchTerm] = useState(""); // Estado para el filtro de búsqueda
+
+  // Estados para comentarios y puntuaciones por cada área
+  const [comentarios, setComentarios] = useState({});
+  const [puntuaciones, setPuntuaciones] = useState({});
+
+  // Estado para guardar los comentarios y puntuaciones enviados
+  const [comentariosEnviados, setComentariosEnviados] = useState({});
+
+  const agregarComentario = (areaId, comentario) => {
+    setComentarios({
+      ...comentarios,
+      [areaId]: comentario
+    });
+  };
+
+  const agregarPuntuacion = (areaId, puntuacion) => {
+    setPuntuaciones({
+      ...puntuaciones,
+      [areaId]: puntuacion
+    });
+  };
+
+  // Funcion para enviar comentario y puntuación
+  const enviarComentarioYPuntuacion = (areaId) => {
+    const comentario = comentarios[areaId];
+    const puntuacion = puntuaciones[areaId];
+
+    if (!comentario || !puntuacion) {
+      alert("Por favor ingrese un comentario y una puntuación.");
+      return;
+    }
+    
+    alert(`Tu comentario: "${comentario}" y tu puntuación: ${puntuacion} fueron enviados`);
+    
+    setComentariosEnviados({
+      ...comentariosEnviados,
+      [areaId]: { comentario, puntuacion }
+    });
+
+    // limpia los campos de comentario y puntuacion
+    setComentarios({ ...comentarios, [areaId]: "" });
+    setPuntuaciones({ ...puntuaciones, [areaId]: null });
+  };
 
   useEffect(() => {
     const user = JSON.parse(localStorage.getItem("user"));
@@ -33,11 +78,14 @@ const AreasNaturales = () => {
     const fetchAreas = async () => {
       try {
         setLoading(true);
-        const response = await fetch(`https://mammal-excited-tarpon.ngrok-free.app/api/natural-area/list?secret=TallerReact2025!&userId=${usuarioLogueado.id}&page=1&pageSize=10`, {
-          headers: {
-            "ngrok-skip-browser-warning": "true"
+        const response = await fetch(
+          `https://mammal-excited-tarpon.ngrok-free.app/api/natural-area/list?secret=TallerReact2025!&userId=${usuarioLogueado.id}&page=1&pageSize=10`,
+          {
+            headers: {
+              "ngrok-skip-browser-warning": "true"
+            }
           }
-        });
+        );
         const data = await response.json();
         setAreas(data.items || []);
       } catch (error) {
@@ -52,16 +100,14 @@ const AreasNaturales = () => {
 
   const eliminarArea = async (id) => {
     try {
-      const response = await fetch("https://mammal-excited-tarpon.ngrok-free.app/api/natural-area/delete?secret=TallerReact2025!",
-        {
-          method: "DELETE",
-          headers: {
-            "Content-Type": "application/json",
-            "ngrok-skip-browser-warning": "true"
-          },
-          body: JSON.stringify({ userId: 1234, naturalAreaId: id })
-        }
-      );
+      const response = await fetch("https://mammal-excited-tarpon.ngrok-free.app/api/natural-area/delete?secret=TallerReact2025!", {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+          "ngrok-skip-browser-warning": "true"
+        },
+        body: JSON.stringify({ userId: usuarioLogueado?.id || 1234, naturalAreaId: id })
+      });
 
       if (response.ok) {
         setAreas((prevAreas) => prevAreas.filter((area) => area.id !== id));
@@ -87,7 +133,7 @@ const AreasNaturales = () => {
         imageUrl: ""
       }
     };
-  
+
     try {
       const response = await fetch("https://mammal-excited-tarpon.ngrok-free.app/api/natural-area/insert?secret=TallerReact2025!", {
         method: "POST",
@@ -97,18 +143,18 @@ const AreasNaturales = () => {
         },
         body: JSON.stringify(areaNueva)
       });
-  
+
       if (response.ok) {
         const data = await response.json();
-  
+
         if (data && data.result && data.naturalArea) {
           const nuevaAreaConId = {
             ...data.naturalArea,
             id: data.naturalArea.id
           };
-  
+
           setAreas((prevAreas) => [nuevaAreaConId, ...prevAreas]);
-          alert("Área agregada con éxito!"); // El alert aquí
+          alert("Área agregada con éxito!");
           setMostrarFormulario(false);
           setNuevaArea({
             id: '',
@@ -130,7 +176,7 @@ const AreasNaturales = () => {
       console.error("Error al agregar área:", error);
     }
   };
-  
+
   const editarArea = (area) => {
     setNuevaArea(area);
     setMostrarFormulario(true);
@@ -138,23 +184,20 @@ const AreasNaturales = () => {
 
   const actualizarArea = async () => {
     try {
-      const response = await fetch(
-        'https://mammal-excited-tarpon.ngrok-free.app/api/natural-area/update?secret=TallerReact2025!',
-        {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-            "ngrok-skip-browser-warning": "true"
-          },
-          body: JSON.stringify(nuevaArea)
-        }
-      );
+      const response = await fetch('https://mammal-excited-tarpon.ngrok-free.app/api/natural-area/update?secret=TallerReact2025!', {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          "ngrok-skip-browser-warning": "true"
+        },
+        body: JSON.stringify(nuevaArea)
+      });
 
       if (response.ok) {
         alert("Área actualizada con éxito!");
         setMostrarFormulario(false);
-        setAreas((prevAreas) => 
-          prevAreas.map((a) => (a.id === nuevaArea.id ? nuevaArea : a)) 
+        setAreas((prevAreas) =>
+          prevAreas.map((a) => (a.id === nuevaArea.id ? nuevaArea : a))
         );
       } else {
         alert("Error al actualizar área.");
@@ -197,6 +240,11 @@ const AreasNaturales = () => {
     });
   };
 
+  // Filtro de area basado en el searchTerm
+  const filterAreas = areas.filter((area) =>
+    area.name.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+  
   return (
     <div>
       <header className="header">
@@ -209,14 +257,14 @@ const AreasNaturales = () => {
                 id="logoDropdown"
                 data-bs-toggle="dropdown"
                 aria-expanded="false"
-              >
-                <img
-                  className="Logo"
-                  id="logo"
-                  src={logo}
-                  alt="Logo de Guardianes del Entorno"
-                  style={{ width: "50px", height: "50px" }}
-                />
+                >
+               <img
+              className="Logo"
+              id="logo"
+              src={logo}
+              alt="Logo de Guardianes del Entorno"
+              style={{ width: "50px", height: "50px" }}
+              />
               </button>
               <ul className="dropdown-menu" aria-labelledby="logoDropdown">
                 <li><Link className="dropdown-item" to="/">Inicio</Link></li>
@@ -224,7 +272,7 @@ const AreasNaturales = () => {
                 <li><Link className="dropdown-item" to="/especiesavistadas">Especies Avistadas</Link></li>
                 <li><Link className="dropdown-item" to="/actividadesconservacion">Actividades Conservación</Link></li>
                 <li><Link className="dropdown-item" to="/registro">Registrarse</Link></li>
-                <li><Link className="dropdown-item" to="/iniciarsesion">Iniciar Sesión</Link></li>
+                <li><Link className="dropdown-item" to="/iniciarsesion">Iniciar Sesion</Link></li>
               </ul>
             </div>
           </div>
@@ -234,9 +282,23 @@ const AreasNaturales = () => {
       <h1 className="titulo-principal text-center">Listado de Areas Naturales</h1>
 
       <div className="d-flex justify-content-center mb-3">
-        <button className="btn btn-success" onClick={() => setMostrarFormulario(true)}>
+        <button
+          className="btn btn-success"
+          onClick={() => setMostrarFormulario(true)}
+        >
           Agregar Nueva Area
         </button>
+      </div>
+
+      {/* Input para filtrar áreas */}
+      <div className="d-flex justify-content-center mb-3">
+        <input
+          type="text"
+          placeholder="Buscar áreas..."
+          className="form-control w-50"
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+        />
       </div>
 
       {mostrarFormulario && (
@@ -253,8 +315,14 @@ const AreasNaturales = () => {
               onChange={(e) => setNuevaArea({ ...nuevaArea, [field]: e.target.value })}
             />
           ))}
+          
+          {/* mapa */}
+          <Mapa ubicacion={nuevaArea.location} />
+
           <div className="d-flex justify-content-between">
-            <button className="btn btn-secondary" onClick={handleCancelar}>Cancelar</button>
+            <button className="btn btn-secondary" onClick={handleCancelar}>
+              Cancelar
+            </button>
             <button className="btn btn-primary" onClick={handleEnviar}>
               {nuevaArea.id ? "Actualizar" : "Agregar"}
             </button>
@@ -264,7 +332,7 @@ const AreasNaturales = () => {
 
       <div className="container">
         <div className="row">
-          {areas.map((area) => (
+          {filterAreas.map((area) => (
             <div key={area.id} className="col-md-4 mb-3">
               <div className="card">
                 <div className="card-body">
@@ -283,8 +351,59 @@ const AreasNaturales = () => {
                   <p><strong>Región:</strong> {area.region}</p>
                   <p><strong>Estado de conservación:</strong> {area.conservationStatus}</p>
 
-                  <button className="btn btn-warning me-2" onClick={() => editarArea(area)}>Editar</button>
-                  <button className="btn btn-danger" onClick={() => eliminarArea(area.id)}>Eliminar</button>
+                  {/* se agrega el mapa en cada area */}
+                  <Mapa ubicacion={area.location} />
+
+                  <button className="btn btn-warning me-2" onClick={() => editarArea(area)}>
+                    Editar
+                  </button>
+                  <button className="btn btn-danger" onClick={() => eliminarArea(area.id)}>
+                    Eliminar
+                  </button>
+
+                  {/* Seccion de comentarios y puntuaciones */}
+                  <div className="mt-3">
+                    <h6>Comentarios</h6>
+                    <textarea
+                      placeholder="Escribe un comentario..."
+                      className="form-control"
+                      rows="3"
+                      value={comentarios[area.id] || ""}
+                      onChange={(e) => agregarComentario(area.id, e.target.value)}
+                    />
+                    <div className="mt-2">
+                      <h6>Puntuación</h6>
+                      {[1, 2, 3, 4, 5].map((star) => (
+                        <button
+                          key={star}
+                          className={`btn ${puntuaciones[area.id] === star ? "btn-warning" : "btn-outline-warning"} me-1`}
+                          onClick={() => agregarPuntuacion(area.id, star)}
+                        >
+                          {star} ⭐
+                        </button>
+                      ))}
+                    </div>
+                    {/* Boton para enviar comentario y puntuación */}
+                    <div className="mt-3">
+                      <button
+                        className="btn btn-primary"
+                        onClick={() => enviarComentarioYPuntuacion(area.id)}
+                      >
+                        Enviar Comentario y Puntuación
+                      </button>
+                    </div>
+                    {/* Mostrar el comentario y la puntuacion enviada*/}
+                    {comentariosEnviados[area.id] && (
+                      <div className="mt-2 alert alert-info">
+                        <p>
+                          <strong>Comentario enviado:</strong> {comentariosEnviados[area.id].comentario}
+                        </p>
+                        <p>
+                          <strong>Puntuación enviada:</strong> {comentariosEnviados[area.id].puntuacion}
+                        </p>
+                      </div>
+                    )}
+                  </div>
                 </div>
               </div>
             </div>
@@ -296,8 +415,6 @@ const AreasNaturales = () => {
 };
 
 export default AreasNaturales;
-
-
 
 
 

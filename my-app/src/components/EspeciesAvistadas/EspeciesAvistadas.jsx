@@ -18,6 +18,7 @@ const EspeciesAvistadas = () => {
   });
   const [usuarioLogueado, setUsuarioLogueado] = useState(null);
   const [mensaje, setMensaje] = useState("");  // Estado para el mensaje de éxito o error
+  const [searchTerm, setSearchTerm] = useState(""); // Estado para el filtro de búsqueda
 
   useEffect(() => {
     const user = JSON.parse(localStorage.getItem("user"));
@@ -71,7 +72,7 @@ const EspeciesAvistadas = () => {
 
   const handleCrearEspecie = async (e) => {
     e.preventDefault();
-    setMensaje(""); // Limpiar el mensaje antes de crear la especie
+    setMensaje(""); 
     
     if (!usuarioLogueado || !usuarioLogueado.id) {
       setMensaje("Error: Usuario no identificado.");
@@ -94,7 +95,7 @@ const EspeciesAvistadas = () => {
       );
 
       if (response.ok) {
-        setMensaje("¡Especie agregada correctamente!");  // Mensaje de éxito
+        setMensaje("¡Especie agregada correctamente!");  
         setNuevaEspecie({
           commonName: "",
           scientificName: "",
@@ -103,12 +104,12 @@ const EspeciesAvistadas = () => {
           naturalAreaId: "",
         });
 
-        // Recargar la lista de especies
+        // aca recargar la lista de especies
         const nuevaLista = await fetch('https://mammal-excited-tarpon.ngrok-free.app/api/species/list?page=1&pageSize=1000');
         const data = await nuevaLista.json();
         setEspecies(data.items);
       } else {
-        setMensaje("Error al guardar la especie.");  // Mensaje de error
+        setMensaje("Error al guardar la especie.");  
       }
     } catch (error) {
       setMensaje("Error de conexión.");
@@ -122,7 +123,7 @@ const EspeciesAvistadas = () => {
 
   const handleActualizarEspecie = async (e) => {
     e.preventDefault();
-    setMensaje(""); // Limpiar el mensaje antes de actualizar la especie
+    setMensaje(""); 
     
     if (!usuarioLogueado || !usuarioLogueado.id) {
       setMensaje("Error: Usuario no identificado.");
@@ -145,22 +146,26 @@ const EspeciesAvistadas = () => {
       );
 
       if (response.ok) {
-        setMensaje("¡Especie actualizada correctamente!");  // Mensaje de éxito
+        setMensaje("¡Especie actualizada correctamente!");  
         setMostrarFormulario(false);
-
-        // Recargar la lista de especies
+        
         const nuevaLista = await fetch('https://mammal-excited-tarpon.ngrok-free.app/api/species/list?page=1&pageSize=1000');
         const data = await nuevaLista.json();
         setEspecies(data.items);
       } else {
-        setMensaje("Error al actualizar la especie.");  // Mensaje de error
+        setMensaje("Error al actualizar la especie.");  
       }
     } catch (error) {
       setMensaje("Error de conexión.");
     }
   };
+  
+  // Filtro de especies basado en el searchTerm
+  const especiesFiltradas = especies.filter((especie) =>
+    especie.commonName.toLowerCase().includes(searchTerm.toLowerCase())
+);
 
-  return (
+return (
     <div>
       <header className="header">
         <nav className="navbar navbar-expand-lg">
@@ -180,109 +185,133 @@ const EspeciesAvistadas = () => {
                   alt="Logo de Guardianes del Entorno"
                   style={{ width: "50px", height: "50px" }}
                 />
-              </button>
-              <ul className="dropdown-menu" aria-labelledby="logoDropdown">
+                </button>
+                <ul className="dropdown-menu" aria-labelledby="logoDropdown">
                 <li><Link className="dropdown-item" to="/">Inicio</Link></li>
                 <li><Link className="dropdown-item" to="/areasnaturales">Áreas Naturales</Link></li>
                 <li><Link className="dropdown-item" to="/especiesavistadas">Especies Avistadas</Link></li>
                 <li><Link className="dropdown-item" to="/actividadesconservacion">Actividades Conservación</Link></li>
                 <li><Link className="dropdown-item" to="/registro">Registrarse</Link></li>
-                <li><Link className="dropdown-item" to="/iniciarsesion">Iniciar Sesión</Link></li>
+                <li><Link className="dropdown-item" to="/iniciarsesion">Iniciar Sesion</Link></li>
               </ul>
             </div>
           </div>
         </nav>
       </header>
-
+      
       <h1 className="titulo-principal text-center">Listado de Especies Avistadas</h1>
-
       <div className="d-flex justify-content-center mb-3">
         <button className="btn btn-success" onClick={() => setMostrarFormulario(true)}>
           Agregar Nueva Especie
         </button>
       </div>
-
-      {/* Mostrar mensaje de éxito o error */}
-      {mensaje && (
-        <div className={`alert ${mensaje.includes("Error") ? "alert-danger" : "alert-success"}`} role="alert">
-          {mensaje}
-        </div>
-      )}
-
-      {mostrarFormulario && (
-        <div className="card p-3 mt-3">
-          <h3>{nuevaEspecie.id ? "Editar Especie" : "Agregar Nueva Especie"}</h3>
-          {/* Entradas para los datos básicos de la especie */}
-          <input
-            type="text"
-            name="commonName"
-            placeholder="Nombre común"
-            className="form-control mb-2"
-            value={nuevaEspecie.commonName}
-            onChange={handleChange}
-          />
-          <input
-            type="text"
-            name="scientificName"
-            placeholder="Nombre científico"
-            className="form-control mb-2"
-            value={nuevaEspecie.scientificName}
-            onChange={handleChange}
-          />
-          <input
-            type="text"
-            name="category"
-            placeholder="Categoría"
-            className="form-control mb-2"
-            value={nuevaEspecie.category}
-            onChange={handleChange}
-          />
-          <input
-            type="text"
-            name="conservationStatus"
-            placeholder="Estado de conservación"
-            className="form-control mb-2"
-            value={nuevaEspecie.conservationStatus}
-            onChange={handleChange}
-          />
-          {/* Select para elegir el área natural */}
-          <div className="form-group mb-2">
-            <label>Área Natural:</label>
-            <select
-              className="form-control"
-              name="naturalAreaId"
-              value={nuevaEspecie.naturalAreaId}
+      
+      {/* Mostrar mensaje de exito o error */}
+        {mensaje && (
+          <div className={`alert ${mensaje.includes("Error") ? "alert-danger" : "alert-success"}`} role="alert">
+            {mensaje}
+          </div>
+        )}
+  
+        {/* Mostrar formulario */}
+        {mostrarFormulario && (
+          <div className="card p-3 mt-3">
+            <h3>{nuevaEspecie.id ? "Editar Especie" : "Agregar Nueva Especie"}</h3>
+            <input
+              type="text"
+              name="commonName"
+              placeholder="Nombre común"
+              className="form-control mb-2"
+              value={nuevaEspecie.commonName}
               onChange={handleChange}
-            >
-              <option value="">Selecciona un área natural</option>
-              {areas.map((area) => (
-                <option key={area.id} value={area.id}>
-                  {area.name}
-                </option>
-              ))}
-            </select>
+            />
+            <input
+              type="text"
+              name="scientificName"
+              placeholder="Nombre científico"
+              className="form-control mb-2"
+              value={nuevaEspecie.scientificName}
+              onChange={handleChange}
+            />
+            <input
+              type="text"
+              name="category"
+              placeholder="Categoría"
+              className="form-control mb-2"
+              value={nuevaEspecie.category}
+              onChange={handleChange}
+            />
+            <input
+              type="text"
+              name="conservationStatus"
+              placeholder="Estado de conservación"
+              className="form-control mb-2"
+              value={nuevaEspecie.conservationStatus}
+              onChange={handleChange}
+            />
+            <div className="form-group mb-2">
+              <label>Área Natural:</label>
+              <select
+                className="form-control"
+                name="naturalAreaId"
+                value={nuevaEspecie.naturalAreaId}
+                onChange={handleChange}
+              >
+                <option value="">Selecciona un área natural</option>
+                {areas.map((area) => (
+                  <option key={area.id} value={area.id}>{area.name}</option>
+                ))}
+              </select>
+            </div>
+            <div className="d-flex justify-content-between">
+              {nuevaEspecie.id ? (
+                <button className="btn btn-primary" onClick={handleActualizarEspecie}>
+                  Actualizar
+                </button>
+              ) : (
+                <button className="btn btn-success" onClick={handleCrearEspecie}>
+                  Agregar Especie
+                </button>
+              )}
+              <button className="btn btn-secondary" onClick={() => setMostrarFormulario(false)}>
+                Cancelar
+              </button>
+            </div>
           </div>
-
-          <div className="d-flex justify-content-between">
-            <button className="btn btn-secondary" onClick={() => setMostrarFormulario(false)}>Cancelar</button>
-            <button className="btn btn-primary" onClick={nuevaEspecie.id ? handleActualizarEspecie : handleCrearEspecie}>
-              {nuevaEspecie.id ? "Actualizar" : "Agregar"}
-            </button>
-          </div>
+        )}
+        
+        {/* Campo de busqueda */}
+         <div className="d-flex justify-content-center mb-3">
+          <input
+            type="text"
+            className="form-control w-50"
+            placeholder="Buscar especie..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+          />
         </div>
-      )}
-
-      <div className="container">
-        <div className="row">
-          {especies.map((especie) => (
-            <div key={especie.id} className="col-md-4 mb-3">
-              <div className="card">
+      
+  
+        {/* Mostrar las tarjetas filtradas */}
+        <div className="container">
+          <div className="row">
+          {especiesFiltradas.map((especie) => (
+            <div className="col-md-4" key={especie.id}>
+              <div className="card mb-4">
                 <div className="card-body">
                   <h5 className="card-title">{especie.commonName}</h5>
                   <p className="card-text">{especie.scientificName}</p>
-                  <p className="card-text">{especie.category}</p>
-                  <p className="card-text">{especie.conservationStatus}</p>
-                  <button className="btn btn-warning" onClick={() => handleEditarEspecie(especie)}>Editar</button>
+                  <p className="card-text">
+                    <strong>Estado de conservación: </strong>{especie.conservationStatus}
+                    </p>
+                    <p className="card-text">
+                    <strong>Categoría: </strong>{especie.category}
+                    </p>
+                  <button
+                  className="btn btn-warning"
+                  onClick={() => handleEditarEspecie(especie)}
+                  > Editar
+                  </button>
                 </div>
               </div>
             </div>
@@ -292,7 +321,7 @@ const EspeciesAvistadas = () => {
     </div>
   );
 };
-
+  
 export default EspeciesAvistadas;
 
 

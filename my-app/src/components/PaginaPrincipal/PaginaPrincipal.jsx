@@ -68,7 +68,8 @@ const PaginaPrincipal = () => {
     <div>
       <header className="header">
         <nav className="navbar navbar-expand-lg">
-          <div className="container-lg">
+          <div className="container-lg navbar-content">
+            {/* Logo y menú desplegable */}
             <div className="dropdown">
               <button
                 className="btn btn-link dropdown-toggle p-0"
@@ -88,17 +89,25 @@ const PaginaPrincipal = () => {
               <ul className="dropdown-menu" aria-labelledby="logoDropdown">
                 <li><Link className="dropdown-item" to="/">Inicio</Link></li>
                 <li><Link className="dropdown-item" to="/areasnaturales">Áreas Naturales</Link></li>
-                <li><Link className="dropdown-item" to="/listaespecies">Especies Avistadas</Link></li>
+                <li><Link className="dropdown-item" to="/especiesavistadas">Especies Avistadas</Link></li>
                 <li><Link className="dropdown-item" to="/actividadesconservacion">Actividades Conservación</Link></li>
                 <li><Link className="dropdown-item" to="/registro">Registrarse</Link></li>
-                <li><Link className="dropdown-item" to="/iniciarsesion">Iniciar Sesión</Link></li>
+                <li><Link className="dropdown-item" to="/iniciarsesion">Iniciar Sesion</Link></li>
               </ul>
+            </div>
+
+            {/* Icono de usuario alineado a la derecha */}
+            <div className="user-profile">
+              <Link to="/userprofile" className="user-icon">
+                <i className="fas fa-user-circle fa-2x"></i>
+              </Link>
             </div>
           </div>
         </nav>
       </header>
 
       <h1 className="titulo-principal">Guardianes del Entorno</h1>
+      
       <div className="container mt-4">
         {/* Listado de las áreas naturales */}
         <h2 className="subtitulo">Listado de Áreas Naturales</h2>
