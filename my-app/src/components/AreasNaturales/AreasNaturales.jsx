@@ -6,7 +6,7 @@ import './AreasNaturales.css';
 const AreasNaturales = () => {
   const [loading, setLoading] = useState(true);
   const [mostrarFormulario, setMostrarFormulario] = useState(false);
-  const [nuevaArea, setNuevaArea] = useState({ // estado para los campos del formulario
+  const [nuevaArea, setNuevaArea] = useState({
     id: null,
     name: "",
     description: "",
@@ -18,14 +18,8 @@ const AreasNaturales = () => {
   });
 
   const [usuarioLogueado, setUsuarioLogueado] = useState(null);
-
-  
   const [areas, setAreas] = useState([]);
 
-
-  const API_URL = "https://mammal-excited-tarpon.ngrok-free.app/api/natural-area";
-
-  // Obtener el usuario logueado
   useEffect(() => {
     const user = JSON.parse(localStorage.getItem("user"));
     if (user) {
@@ -33,18 +27,19 @@ const AreasNaturales = () => {
     }
   }, []);
 
-  // Cargar áreas desde la API
   useEffect(() => {
+    if (!usuarioLogueado) return;
+
     const fetchAreas = async () => {
       try {
         setLoading(true);
-        const response = await fetch(`${API_URL}/list?userId=${usuarioLogueado?.id || 1234}&page=1&pageSize=10`, {
+        const response = await fetch(`https://mammal-excited-tarpon.ngrok-free.app/api/natural-area/list?secret=TallerReact2025!&userId=${usuarioLogueado.id}&page=1&pageSize=10`, {
           headers: {
             "ngrok-skip-browser-warning": "true"
           }
         });
         const data = await response.json();
-        setAreas(data.items || []);  // Asegura que 'items' exista y es un array
+        setAreas(data.items || []);
       } catch (error) {
         console.error('Error fetching data:', error);
       } finally {
@@ -52,34 +47,24 @@ const AreasNaturales = () => {
       }
     };
 
-    if (usuarioLogueado) {
-      fetchAreas();
-    }
+    fetchAreas();
   }, [usuarioLogueado]);
-
-  if (loading) {
-    return <p>Cargando áreas naturales...</p>;
-  }
 
   const eliminarArea = async (id) => {
     try {
-      const response = await fetch(
-        `${API_URL}/delete?secret=TallerReact2025!`,
+      const response = await fetch("https://mammal-excited-tarpon.ngrok-free.app/api/natural-area/delete?secret=TallerReact2025!",
         {
           method: "DELETE",
           headers: {
             "Content-Type": "application/json",
             "ngrok-skip-browser-warning": "true"
           },
-          body: JSON.stringify({ userId: usuarioLogueado?.id, naturalAreaId: id })
-
+          body: JSON.stringify({ userId: 1234, naturalAreaId: id })
         }
       );
-      
-      console.log(response);  // Ver la respuesta de la API
-  
+
       if (response.ok) {
-        setAreas((prevAreas) => prevAreas.filter((area) => area.id !== id)); 
+        setAreas((prevAreas) => prevAreas.filter((area) => area.id !== id));
         alert("Área eliminada con éxito!");
       } else {
         alert("Error al eliminar área.");
@@ -88,23 +73,23 @@ const AreasNaturales = () => {
       console.error("Error al eliminar área:", error);
     }
   };
-  
-  
-  
-  
 
-
-
-
-  // Función para agregar nueva área
   const agregarArea = async () => {
     const areaNueva = {
       userId: usuarioLogueado?.id,
-      naturalArea: { ...nuevaArea }
+      naturalArea: {
+        name: "",
+        location: "",
+        areaType: "",
+        region: "",
+        conservationStatus: "",
+        description: "",
+        imageUrl: ""
+      }
     };
-
+  
     try {
-      const response = await fetch(`${API_URL}/insert?secret=TallerReact2025!`, {
+      const response = await fetch("https://mammal-excited-tarpon.ngrok-free.app/api/natural-area/insert?secret=TallerReact2025!", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -112,17 +97,28 @@ const AreasNaturales = () => {
         },
         body: JSON.stringify(areaNueva)
       });
-
+  
       if (response.ok) {
         const data = await response.json();
+  
         if (data && data.result && data.naturalArea) {
-          const nuevaAreaConId = { ...data.naturalArea, id: data.naturalArea.id };
+          const nuevaAreaConId = {
+            ...data.naturalArea,
+            id: data.naturalArea.id
+          };
+  
           setAreas((prevAreas) => [nuevaAreaConId, ...prevAreas]);
-          alert("Área agregada con éxito!");
+          alert("Área agregada con éxito!"); // El alert aquí
           setMostrarFormulario(false);
           setNuevaArea({
-            id: null, name: "", description: "", location: "", areaType: "",
-            region: "", conservationStatus: "", imageUrl: ""
+            id: '',
+            name: '',
+            description: '',
+            location: '',
+            areaType: '',
+            region: '',
+            conservationStatus: '',
+            imageUrl: ''
           });
         } else {
           alert("Error al agregar área. La API no devolvió los datos esperados.");
@@ -134,28 +130,16 @@ const AreasNaturales = () => {
       console.error("Error al agregar área:", error);
     }
   };
-    
   
-  
-  
-
-  
-  
-
- 
-  
-
-  // Función para editar área
   const editarArea = (area) => {
     setNuevaArea(area);
     setMostrarFormulario(true);
   };
 
-  // Función para actualizar área
   const actualizarArea = async () => {
     try {
       const response = await fetch(
-        `${API_URL}/update/${nuevaArea.id}?secret=TallerReact2025!`,
+        'https://mammal-excited-tarpon.ngrok-free.app/api/natural-area/update?secret=TallerReact2025!',
         {
           method: "PUT",
           headers: {
@@ -170,7 +154,7 @@ const AreasNaturales = () => {
         alert("Área actualizada con éxito!");
         setMostrarFormulario(false);
         setAreas((prevAreas) => 
-          prevAreas.map((a) => (a.id === nuevaArea.id ? nuevaArea : a)) // Actualiza el área en la lista
+          prevAreas.map((a) => (a.id === nuevaArea.id ? nuevaArea : a)) 
         );
       } else {
         alert("Error al actualizar área.");
@@ -179,10 +163,7 @@ const AreasNaturales = () => {
       console.error("Error al actualizar área:", error);
     }
   };
-  
 
-
-  // Función para manejar la cancelación del formulario
   const handleCancelar = () => {
     setMostrarFormulario(false);
     setNuevaArea({
@@ -197,15 +178,24 @@ const AreasNaturales = () => {
     });
   };
 
-
-  const handleSubmit = () => {
+  const handleEnviar = () => {
     if (nuevaArea.id) {
-      actualizarArea(); // Llamamos a la función de actualización
+      setAreas(areas.map(area => area.id === nuevaArea.id ? nuevaArea : area));
     } else {
-      agregarArea(); // Llamamos a la función de agregado
+      setAreas([...areas, { ...nuevaArea, id: Date.now() }]);
     }
+    setMostrarFormulario(false);
+    setNuevaArea({
+      id: null,
+      name: "",
+      description: "",
+      location: "",
+      areaType: "",
+      region: "",
+      conservationStatus: "",
+      imageUrl: ""
+    });
   };
-  
 
   return (
     <div>
@@ -230,7 +220,7 @@ const AreasNaturales = () => {
               </button>
               <ul className="dropdown-menu" aria-labelledby="logoDropdown">
                 <li><Link className="dropdown-item" to="/">Inicio</Link></li>
-                <li><Link className="dropdown-item" to="/areasnaturales">Areas Naturales</Link></li>
+                <li><Link className="dropdown-item" to="/areasnaturales">Áreas Naturales</Link></li>
                 <li><Link className="dropdown-item" to="/especiesavistadas">Especies Avistadas</Link></li>
                 <li><Link className="dropdown-item" to="/actividadesconservacion">Actividades Conservación</Link></li>
                 <li><Link className="dropdown-item" to="/registro">Registrarse</Link></li>
@@ -243,17 +233,12 @@ const AreasNaturales = () => {
 
       <h1 className="titulo-principal text-center">Listado de Areas Naturales</h1>
 
-      {/* Botón para mostrar el formulario */}
       <div className="d-flex justify-content-center mb-3">
-      <button className="btn btn-primary" onClick={() => setMostrarFormulario(true)}>
-        Agregar Nueva Área
-      </button>
+        <button className="btn btn-success" onClick={() => setMostrarFormulario(true)}>
+          Agregar Nueva Area
+        </button>
       </div>
 
-      
-
-      {/* Formulario de áreas */}
-      {/* Formulario para agregar o editar área */}
       {mostrarFormulario && (
         <div className="card p-3 mt-3">
           <h3>{nuevaArea.id ? "Editar Área" : "Agregar Nueva Área"}</h3>
@@ -270,50 +255,49 @@ const AreasNaturales = () => {
           ))}
           <div className="d-flex justify-content-between">
             <button className="btn btn-secondary" onClick={handleCancelar}>Cancelar</button>
-            <button className="btn btn-primary" onClick={handleSubmit}>
+            <button className="btn btn-primary" onClick={handleEnviar}>
               {nuevaArea.id ? "Actualizar" : "Agregar"}
             </button>
           </div>
         </div>
       )}
 
-      {/* Lista de Áreas */}
       <div className="container">
-  <div className="row">
-    {areas.map((area) => (
-      <div key={area.id} className="col-md-4 mb-3">
-        <div className="card">
-          <div className="card-body">
-            {area.imageUrl && (
-              <img
-                src={area.imageUrl}
-                className="card-img-top"
-                alt={area.name}
-                style={{ height: "200px", objectFit: "cover" }}
-              />
-            )}
-            <h5 className="card-title">{area.name}</h5>
-            <p className="card-text">{area.description}</p>
-            <p><strong>Ubicación:</strong> {area.location}</p>
-            <p><strong>Tipo de área:</strong> {area.areaType}</p>
-            <p><strong>Región:</strong> {area.region}</p>
-            <p><strong>Estado de conservación:</strong> {area.conservationStatus}</p>
-            <div className="d-flex">
-              <button className="btn btn-warning me-2" onClick={() => editarArea(area)}>Editar</button>
-              <button className="btn btn-danger" onClick={() => eliminarArea(area.id)}>Eliminar</button>
+        <div className="row">
+          {areas.map((area) => (
+            <div key={area.id} className="col-md-4 mb-3">
+              <div className="card">
+                <div className="card-body">
+                  {area.imageUrl && (
+                    <img
+                      src={area.imageUrl}
+                      className="card-img-top"
+                      alt={area.name}
+                      style={{ height: "200px", objectFit: "cover" }}
+                    />
+                  )}
+                  <h5 className="card-title">{area.name}</h5>
+                  <p className="card-text">{area.description}</p>
+                  <p><strong>Ubicación:</strong> {area.location}</p>
+                  <p><strong>Tipo de área:</strong> {area.areaType}</p>
+                  <p><strong>Región:</strong> {area.region}</p>
+                  <p><strong>Estado de conservación:</strong> {area.conservationStatus}</p>
+
+                  <button className="btn btn-warning me-2" onClick={() => editarArea(area)}>Editar</button>
+                  <button className="btn btn-danger" onClick={() => eliminarArea(area.id)}>Eliminar</button>
+                </div>
+              </div>
             </div>
-          </div>
+          ))}
         </div>
       </div>
-    ))}
-  </div>
-</div>
-
-      </div>
-    
+    </div>
   );
-}
+};
 
-export default AreasNaturales; 
+export default AreasNaturales;
+
+
+
 
 

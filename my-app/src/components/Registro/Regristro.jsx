@@ -20,47 +20,40 @@ evento.preventDefault();
 setMensaje(`El usuario fue registrado con éxito: ${usuario}`);
 };
 return (
-<div>
-<header className="header">
-<nav className="navbar navbar-expand-lg">
-<div className="container-lg">
-<div className="dropdown">
-<button
-className="btn btn-link dropdown-toggle p-0"
-type="button"
-id="logoDropdown"
+    <div>
+      <header className="header">
+              <nav className="navbar navbar-expand-lg">
+                <div className="container-lg">
+                  <div className="dropdown">
+                    <button
+                      className="btn btn-link dropdown-toggle p-0"
+                      type="button"
+                      id="logoDropdown"
+                      data-bs-toggle="dropdown"
+                      aria-expanded="false"
+                    >
+                      <img
+                        className="Logo"
+                        id="logo"
+                        src={logo}
+                        alt="Logo de Guardianes del Entorno"
+                        style={{ width: "50px", height: "50px" }}
+                      />
+                    </button>
+                    <ul className="dropdown-menu" aria-labelledby="logoDropdown">
+                      <li><Link className="dropdown-item" to="/">Inicio</Link></li>
+                      <li><Link className="dropdown-item" to="/areasnaturales">Áreas Naturales</Link></li>
+                      <li><Link className="dropdown-item" to="/especiesavistadas">Especies Avistadas</Link></li>
+                      <li><Link className="dropdown-item" to="/actividadesconservacion">Actividades Conservación</Link></li>
+                      <li><Link className="dropdown-item" to="/registro">Registrarse</Link></li>
+                      <li><Link className="dropdown-item" to="/iniciarsesion">Iniciar Sesión</Link></li>
+                    </ul>
+                  </div>
+                </div>
+              </nav>
+            </header>
 
-data-bs-toggle="dropdown"
-aria-expanded="false"
->
-<img
-className="Logo"
-id="logo"
-src={logo}
-alt="Logo de Guardianes del Entorno"
-style={{ width: "50px", height: "50px" }} // Ajusta
-el tamaño según necesites
-/>
-</button>
-<ul className="dropdown-menu"
-aria-labelledby="logoDropdown">
-<li><Link className="dropdown-item"
-to="/">Inicio</Link></li>
-<li><Link className="dropdown-item"
-to="/areasnaturales">Áreas Naturales</Link></li>
-<li><Link className="dropdown-item"
-to="/cargadedatos">Carga de Datos</Link></li>
-<li><Link className="dropdown-item"
-to="/registro">Registrarse</Link></li>
-<li><Link className="dropdown-item"
-to="/iniciarsesion">Iniciar Sesión</Link></li>
-</ul>
-</div>
-</div>
-</nav>
-</header>
 {/* Formulario de Registro */}
-
 <section className="registro-section mt-5">
 <div className="container mt-5">
 <div className="registro-header">
@@ -98,7 +91,7 @@ Crear Cuenta
 </form>
 {/* Muestra un mensaje de comprobación */}
 {mensaje && <p className="mensaje-exito text-center
-mt-3">{mensaje}</p>}
+mt-4">{mensaje}</p>}
 </div>
 </section>
 

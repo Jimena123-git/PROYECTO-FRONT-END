@@ -5,7 +5,7 @@ import './EspeciesAvistadas.css';
 
 const EspeciesAvistadas = () => {
   const [especies, setEspecies] = useState([]);
-  const [areas, setAreas] = useState([]); // Lista de áreas naturales
+  const [areas, setAreas] = useState([]); 
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [mostrarFormulario, setMostrarFormulario] = useState(false);
@@ -14,31 +14,21 @@ const EspeciesAvistadas = () => {
     scientificName: "",
     category: "",
     conservationStatus: "",
-    naturalAreaId: ""  // Aquí se guardará el ID del área natural seleccionada
+    naturalAreaId: ""
   });
   const [usuarioLogueado, setUsuarioLogueado] = useState(null);
-  const [comentario, setComentario] = useState('');
-  const [puntuacion, setPuntuacion] = useState(1);
+  const [mensaje, setMensaje] = useState("");  // Estado para el mensaje de éxito o error
 
-  // Obtener usuario logueado (puedes ajustarlo según tu lógica)
   useEffect(() => {
     const user = JSON.parse(localStorage.getItem("user"));
-    if (user) {
-      setUsuarioLogueado(user);
-    } else {
-      // Si no hay usuario, asigna un valor por defecto (por ejemplo, 123)
-      setUsuarioLogueado({ id: 123 });
-    }
+    setUsuarioLogueado(user || { id: 123 });
   }, []);
 
-  // Cargar la lista de especies
   useEffect(() => {
     const fetchEspecies = async () => {
       try {
         const response = await fetch('https://mammal-excited-tarpon.ngrok-free.app/api/species/list?page=1&pageSize=1000');
-        if (!response.ok) {
-          throw new Error('Error al obtener las especies');
-        }
+        if (!response.ok) throw new Error('Error al obtener las especies');
         const data = await response.json();
         setEspecies(data.items);
       } catch (error) {
@@ -51,167 +41,123 @@ const EspeciesAvistadas = () => {
     fetchEspecies();
   }, []);
 
-  // Cargar la lista de áreas naturales para poder elegir el id
   useEffect(() => {
     const fetchAreas = async () => {
       try {
         const response = await fetch(
-          'https://mammal-excited-tarpon.ngrok-free.app/api/natural-area/list?secret=TallerReact2025!&userId=' + (usuarioLogueado?.id || 123) + '&page=1&pageSize=1000',
+          `https://mammal-excited-tarpon.ngrok-free.app/api/natural-area/list?secret=TallerReact2025!&userId=${usuarioLogueado?.id || 123}&page=1&pageSize=1000`,
           { headers: { "ngrok-skip-browser-warning": "true" } }
         );
-        const data = await response.json();
-        setAreas(data.items || []);
+        if (response.ok) {
+          const data = await response.json();
+          setAreas(data.items || []);
+        }
       } catch (error) {
         console.error("Error al obtener áreas naturales:", error);
       }
     };
 
-    // Aseguramos que haya usuario para hacer la petición
     if (usuarioLogueado) {
       fetchAreas();
     }
   }, [usuarioLogueado]);
 
-  if (loading) {
-    return <p>Cargando especies...</p>;
-  }
-
-  if (error) {
-    return <p className="text-danger">Hubo un error: {error}</p>;
-  }
-
-  const eliminarEspecie = async (id) => {
-    try {
-      const response = await fetch('https://mammal-excited-tarpon.ngrok-free.app/api/species/delete?secret=TallerReact2025!', {
-        method: "DELETE",
-        headers: {
-          "Content-Type": "application/json",
-          "ngrok-skip-browser-warning": "true"
-        },
-        body: JSON.stringify({ userId: usuarioLogueado?.id || 123, especieId: id })
-      });
-
-      if (response.ok) {
-        setEspecies((prevEspecie) => prevEspecie.filter((especie) => especie.id !== id));
-        alert("Especie eliminada con éxito!");
-      } else {
-        alert("Error al eliminar especie.");
-      }
-    } catch (error) {
-      console.error("Error al eliminar especie:", error);
-    }
+  const handleChange = (e) => {
+    setNuevaEspecie({
+      ...nuevaEspecie,
+      [e.target.name]: e.target.value
+    });
   };
 
-  const agregarEspecie = async () => {
-    const especieNueva = {
-      userId: usuarioLogueado?.id || 123,
-      species: {
-        commonName: nuevaEspecie.commonName,
-        scientificName: nuevaEspecie.scientificName,
-        category: nuevaEspecie.category,
-        conservationStatus: nuevaEspecie.conservationStatus,
-        naturalAreaId: Number(nuevaEspecie.naturalAreaId)  // Convertimos a número
-      }
+  const handleCrearEspecie = async (e) => {
+    e.preventDefault();
+    setMensaje(""); // Limpiar el mensaje antes de crear la especie
+    
+    if (!usuarioLogueado || !usuarioLogueado.id) {
+      setMensaje("Error: Usuario no identificado.");
+      return;
+    }
+
+    const requestBody = {
+      userId: usuarioLogueado.id,
+      species: { ...nuevaEspecie, naturalAreaId: parseInt(nuevaEspecie.naturalAreaId, 10) }
     };
-  
+
     try {
-      const response = await fetch('https://mammal-excited-tarpon.ngrok-free.app/api/species/insert?secret=TallerReact2025!', {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "ngrok-skip-browser-warning": "true",
-        },
-        body: JSON.stringify(especieNueva),
-      });
-  
-      if (response.ok) {
-        const data = await response.json();
-        if (data && data.result && data.species) {
-          setEspecies((prevEspecies) => [data.species, ...prevEspecies]);
-          alert("Especie agregada con éxito!");
-          setMostrarFormulario(false);
-          setNuevaEspecie({
-            commonName: "",
-            scientificName: "",
-            category: "",
-            conservationStatus: "",
-            naturalAreaId: "",
-          });
-        } else {
-          alert("Error al agregar especie.");
+      const response = await fetch(
+        "https://mammal-excited-tarpon.ngrok-free.app/api/species/insert?secret=TallerReact2025!",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(requestBody),
         }
+      );
+
+      if (response.ok) {
+        setMensaje("¡Especie agregada correctamente!");  // Mensaje de éxito
+        setNuevaEspecie({
+          commonName: "",
+          scientificName: "",
+          category: "",
+          conservationStatus: "",
+          naturalAreaId: "",
+        });
+
+        // Recargar la lista de especies
+        const nuevaLista = await fetch('https://mammal-excited-tarpon.ngrok-free.app/api/species/list?page=1&pageSize=1000');
+        const data = await nuevaLista.json();
+        setEspecies(data.items);
       } else {
-        alert("Error al agregar especie.");
+        setMensaje("Error al guardar la especie.");  // Mensaje de error
       }
     } catch (error) {
-      console.error("Error al agregar especie:", error);
+      setMensaje("Error de conexión.");
     }
   };
-  
-  const editarEspecie = (especie) => {
+
+  const handleEditarEspecie = (especie) => {
     setNuevaEspecie(especie);
     setMostrarFormulario(true);
   };
 
-  const actualizarEspecie = async () => {
+  const handleActualizarEspecie = async (e) => {
+    e.preventDefault();
+    setMensaje(""); // Limpiar el mensaje antes de actualizar la especie
+    
+    if (!usuarioLogueado || !usuarioLogueado.id) {
+      setMensaje("Error: Usuario no identificado.");
+      return;
+    }
+
+    const requestBody = {
+      userId: usuarioLogueado.id,
+      species: { ...nuevaEspecie, naturalAreaId: parseInt(nuevaEspecie.naturalAreaId, 10) }
+    };
+
     try {
-      const response = await fetch('https://mammal-excited-tarpon.ngrok-free.app/api/species/update?secret=TallerReact2025!', {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-          "ngrok-skip-browser-warning": "true"
-        },
-        body: JSON.stringify(nuevaEspecie)
-      });
+      const response = await fetch(
+        `https://mammal-excited-tarpon.ngrok-free.app/api/species/update?secret=TallerReact2025!`,
+        {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(requestBody),
+        }
+      );
 
       if (response.ok) {
-        alert("Especie actualizada con éxito!");
+        setMensaje("¡Especie actualizada correctamente!");  // Mensaje de éxito
         setMostrarFormulario(false);
-        setEspecies((prevEspecies) =>
-          prevEspecies.map((e) => (e.id === nuevaEspecie.id ? nuevaEspecie : e))
-        );
+
+        // Recargar la lista de especies
+        const nuevaLista = await fetch('https://mammal-excited-tarpon.ngrok-free.app/api/species/list?page=1&pageSize=1000');
+        const data = await nuevaLista.json();
+        setEspecies(data.items);
       } else {
-        alert("Error al actualizar especie.");
+        setMensaje("Error al actualizar la especie.");  // Mensaje de error
       }
     } catch (error) {
-      console.error("Error al actualizar especie:", error);
+      setMensaje("Error de conexión.");
     }
-  };
-
-  const handleCancelar = () => {
-    setMostrarFormulario(false);
-    setNuevaEspecie({
-      commonName: "",
-      scientificName: "",
-      category: "",
-      conservationStatus: "",
-      naturalAreaId: ""
-    });
-  };
-
-  const manejoBotonEnviar = () => {
-    if (nuevaEspecie.id) {
-      actualizarEspecie(); 
-    } else {
-      agregarEspecie(); 
-    }
-  };
-
-  const handleComentarioChange = (e) => {
-    setComentario(e.target.value);
-  };
-
-  const handlePuntuacionChange = (e) => {
-    setPuntuacion(Number(e.target.value));
-  };
-
-  const handleEnviarComentario = (e) => {
-    e.preventDefault();
-    console.log("Comentario:", comentario);
-    console.log("Puntuación:", puntuacion);
-    alert("Comentario y puntuación enviados con éxito!");
-    setComentario("");
-    setPuntuacion(1);
   };
 
   return (
@@ -256,6 +202,13 @@ const EspeciesAvistadas = () => {
         </button>
       </div>
 
+      {/* Mostrar mensaje de éxito o error */}
+      {mensaje && (
+        <div className={`alert ${mensaje.includes("Error") ? "alert-danger" : "alert-success"}`} role="alert">
+          {mensaje}
+        </div>
+      )}
+
       {mostrarFormulario && (
         <div className="card p-3 mt-3">
           <h3>{nuevaEspecie.id ? "Editar Especie" : "Agregar Nueva Especie"}</h3>
@@ -266,7 +219,7 @@ const EspeciesAvistadas = () => {
             placeholder="Nombre común"
             className="form-control mb-2"
             value={nuevaEspecie.commonName}
-            onChange={(e) => setNuevaEspecie({ ...nuevaEspecie, commonName: e.target.value })}
+            onChange={handleChange}
           />
           <input
             type="text"
@@ -274,7 +227,7 @@ const EspeciesAvistadas = () => {
             placeholder="Nombre científico"
             className="form-control mb-2"
             value={nuevaEspecie.scientificName}
-            onChange={(e) => setNuevaEspecie({ ...nuevaEspecie, scientificName: e.target.value })}
+            onChange={handleChange}
           />
           <input
             type="text"
@@ -282,7 +235,7 @@ const EspeciesAvistadas = () => {
             placeholder="Categoría"
             className="form-control mb-2"
             value={nuevaEspecie.category}
-            onChange={(e) => setNuevaEspecie({ ...nuevaEspecie, category: e.target.value })}
+            onChange={handleChange}
           />
           <input
             type="text"
@@ -290,7 +243,7 @@ const EspeciesAvistadas = () => {
             placeholder="Estado de conservación"
             className="form-control mb-2"
             value={nuevaEspecie.conservationStatus}
-            onChange={(e) => setNuevaEspecie({ ...nuevaEspecie, conservationStatus: e.target.value })}
+            onChange={handleChange}
           />
           {/* Select para elegir el área natural */}
           <div className="form-group mb-2">
@@ -299,7 +252,7 @@ const EspeciesAvistadas = () => {
               className="form-control"
               name="naturalAreaId"
               value={nuevaEspecie.naturalAreaId}
-              onChange={(e) => setNuevaEspecie({ ...nuevaEspecie, naturalAreaId: e.target.value })}
+              onChange={handleChange}
             >
               <option value="">Selecciona un área natural</option>
               {areas.map((area) => (
@@ -311,8 +264,8 @@ const EspeciesAvistadas = () => {
           </div>
 
           <div className="d-flex justify-content-between">
-            <button className="btn btn-secondary" onClick={handleCancelar}>Cancelar</button>
-            <button className="btn btn-primary" onClick={manejoBotonEnviar}>
+            <button className="btn btn-secondary" onClick={() => setMostrarFormulario(false)}>Cancelar</button>
+            <button className="btn btn-primary" onClick={nuevaEspecie.id ? handleActualizarEspecie : handleCrearEspecie}>
               {nuevaEspecie.id ? "Actualizar" : "Agregar"}
             </button>
           </div>
@@ -326,51 +279,21 @@ const EspeciesAvistadas = () => {
               <div className="card">
                 <div className="card-body">
                   <h5 className="card-title">{especie.commonName}</h5>
-                  <p><strong>Científico:</strong> {especie.scientificName}</p>
-                  <p><strong>Categoría:</strong> {especie.category}</p>
-                  <p><strong>Estado de conservación:</strong> {especie.conservationStatus}</p>
-                  <p><strong>ID Área Natural:</strong> {especie.naturalAreaId}</p>
-                  <button className="btn btn-warning me-2" onClick={() => editarEspecie(especie)}>Editar</button>
-                  <button className="btn btn-danger" onClick={() => eliminarEspecie(especie.id)}>Eliminar</button>
+                  <p className="card-text">{especie.scientificName}</p>
+                  <p className="card-text">{especie.category}</p>
+                  <p className="card-text">{especie.conservationStatus}</p>
+                  <button className="btn btn-warning" onClick={() => handleEditarEspecie(especie)}>Editar</button>
                 </div>
               </div>
             </div>
           ))}
         </div>
       </div>
-
-      <form onSubmit={handleEnviarComentario}>
-        <div className="form-group">
-          <label htmlFor="comentario">Comentario:</label>
-          <textarea
-            className="form-control"
-            id="comentario"
-            value={comentario}
-            onChange={handleComentarioChange}
-            rows="3"
-          />
-        </div>
-
-        <select
-          className="form-control"
-          id="puntuacion"
-          value={puntuacion}
-          onChange={handlePuntuacionChange}
-        >
-          {[1, 2, 3, 4, 5].map((puntaje) => (
-            <option key={puntaje} value={puntaje}>
-              {puntaje}
-            </option>
-          ))}
-        </select>
-
-        <button type="submit" className="btn btn-success mt-2">
-          Enviar Comentario
-        </button>
-      </form>
     </div>
   );
 };
 
 export default EspeciesAvistadas;
+
+
 

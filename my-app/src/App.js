@@ -8,6 +8,7 @@ import ActividadesConservacion from './components/ActividadesConservacion/Activi
 import EspeciesAvistadas from './components/EspeciesAvistadas/EspeciesAvistadas';
 
 
+
 function App() {
   return (
     <Router>
@@ -18,6 +19,7 @@ function App() {
         <Route path="/areasnaturales" element={<AreasNaturales />} />
         <Route path="/actividadesconservacion" element={<ActividadesConservacion />} />
         <Route path="/especiesavistadas" element={<EspeciesAvistadas />} />
+    \
       </Routes>
     </Router>
   );
