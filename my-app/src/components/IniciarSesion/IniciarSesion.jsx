@@ -4,10 +4,10 @@ import "./IniciarSesion.css";
 import logo from "../../images/logodeGuardianesdelEntorno.png";
 
 function IniciarSesion() {
-  const [usuario, setUsuario] = useState(""); // Estado para el usuario
-  const [contrasenia, setContrasenia] = useState(""); // Estado para la contraseña
-  const [error, setError] = useState(""); // Estado para mostrar errores
-  const [message, setMessage] = useState(""); // Estado para mostrar mensaje de éxito
+  const [usuario, setUsuario] = useState(""); 
+  const [contrasenia, setContrasenia] = useState(""); 
+  const [error, setError] = useState(""); 
+  const [message, setMessage] = useState("");
   const navigate = useNavigate();  // Redirigir después del login
 
   // Manejo de cambios en los inputs
@@ -21,8 +21,7 @@ function IniciarSesion() {
 
   const handleSubmit = async (evento) => {
     evento.preventDefault();
-
-    // verificar si los campos estan vacios
+    
     if (!usuario || !contrasenia) {
       setError("Por favor, complete todos los campos.");
       return;
@@ -58,7 +57,7 @@ function IniciarSesion() {
 
       if (data.isValid && data.user) {
         setMessage("¡Inicio de sesión exitoso!");
-        localStorage.setItem("user", JSON.stringify(data.user));
+        localStorage.setItem("user", JSON.stringify(data.user)); // Guarda el usuario en localStorage.
         navigate("/registro"); 
       } else {
         setError("Datos incorrectos");

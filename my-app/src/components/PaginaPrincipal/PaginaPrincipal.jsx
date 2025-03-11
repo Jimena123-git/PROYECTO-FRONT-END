@@ -6,20 +6,14 @@ import logo from '../../images/logodeGuardianesdelEntorno.png';
 const PaginaPrincipal = () => {
   // Estados para las áreas naturales
   const [areas, setAreas] = useState([]);
-  const [page, setPage] = useState(1);
-  const [totalPages, setTotalPages] = useState(1);
-  const areaPageSize = 10;
 
   // Estados para las especies avistadas
   const [especies, setEspecies] = useState([]);
-  const [especiesPage, setEspeciesPage] = useState(1);
-  const [especiesTotalPages, setEspeciesTotalPages] = useState(1);
-  const especiesPageSize = 10;
 
   // Función para obtener las áreas naturales
   const fetchAreas = async () => {
     try {
-      const apiUrl = `https://mammal-excited-tarpon.ngrok-free.app/api/natural-area/list?secret=TallerReact2025!&page=${page}&pageSize=${areaPageSize}`;
+      const apiUrl = `https://mammal-excited-tarpon.ngrok-free.app/api/natural-area/list?secret=TallerReact2025!&page=1&pageSize=100`; // Puedes cambiar el 100 por el número total de áreas que quieras traer
       const response = await fetch(apiUrl, {
         headers: {
           'ngrok-skip-browser-warning': 'true',
@@ -30,7 +24,6 @@ const PaginaPrincipal = () => {
 
       const data = await response.json();
       setAreas(data.items);
-      setTotalPages(data.totalPages);
     } catch (error) {
       console.error('Error al obtener áreas naturales:', error);
     }
@@ -38,12 +31,12 @@ const PaginaPrincipal = () => {
 
   useEffect(() => {
     fetchAreas();
-  }, [page]);
+  }, []);
 
   // Función para obtener las especies
   const fetchEspecies = async () => {
     try {
-      const apiUrl = `https://mammal-excited-tarpon.ngrok-free.app/api/species/list?secret=TallerReact2025!&page=${especiesPage}&pageSize=${especiesPageSize}`;
+      const apiUrl = `https://mammal-excited-tarpon.ngrok-free.app/api/species/list?secret=TallerReact2025!&page=1&pageSize=100`;
       const response = await fetch(apiUrl, {
         headers: {
           'ngrok-skip-browser-warning': 'true',
@@ -54,7 +47,6 @@ const PaginaPrincipal = () => {
 
       const data = await response.json();
       setEspecies(data.items);
-      setEspeciesTotalPages(data.totalPages);
     } catch (error) {
       console.error('Error al obtener especies:', error);
     }
@@ -62,7 +54,7 @@ const PaginaPrincipal = () => {
 
   useEffect(() => {
     fetchEspecies();
-  }, [especiesPage]);
+  }, []);
 
   return (
     <div>

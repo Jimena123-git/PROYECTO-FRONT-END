@@ -9,7 +9,7 @@ const AreasNaturales = () => {
   const [mostrarFormulario, setMostrarFormulario] = useState(false);
   const [nuevaArea, setNuevaArea] = useState({
     id: null,
-    name: "",
+    name: "", //  Se inicializan como cadenas vacías porque el usuario aún no ha ingresado datos.
     description: "",
     location: "",
     areaType: "",
@@ -22,7 +22,7 @@ const AreasNaturales = () => {
   const [areas, setAreas] = useState([]);
   const [searchTerm, setSearchTerm] = useState(""); // Estado para el filtro de búsqueda
 
-  // Estados para comentarios y puntuaciones por cada área
+  // Estados para comentarios y puntuaciones por cada area
   const [comentarios, setComentarios] = useState({});
   const [puntuaciones, setPuntuaciones] = useState({});
 
@@ -30,17 +30,11 @@ const AreasNaturales = () => {
   const [comentariosEnviados, setComentariosEnviados] = useState({});
 
   const agregarComentario = (areaId, comentario) => {
-    setComentarios({
-      ...comentarios,
-      [areaId]: comentario
-    });
+    setComentarios({...comentarios, [areaId]: comentario });
   };
 
   const agregarPuntuacion = (areaId, puntuacion) => {
-    setPuntuaciones({
-      ...puntuaciones,
-      [areaId]: puntuacion
-    });
+    setPuntuaciones({...puntuaciones, [areaId]: puntuacion});
   };
 
   // Funcion para enviar comentario y puntuación
@@ -55,14 +49,11 @@ const AreasNaturales = () => {
     
     alert(`Tu comentario: "${comentario}" y tu puntuación: ${puntuacion} fueron enviados`);
     
-    setComentariosEnviados({
-      ...comentariosEnviados,
-      [areaId]: { comentario, puntuacion }
+    setComentariosEnviados({...comentariosEnviados, [areaId]: { comentario, puntuacion }
     });
-
-    // limpia los campos de comentario y puntuacion
+    
     setComentarios({ ...comentarios, [areaId]: "" });
-    setPuntuaciones({ ...puntuaciones, [areaId]: null });
+    setPuntuaciones({ ...puntuaciones, [areaId]: null }); // la puntuación en null, para permitir una nueva entrada
   };
 
   useEffect(() => {
@@ -100,7 +91,7 @@ const AreasNaturales = () => {
 
   const eliminarArea = async (id) => {
     try {
-      const response = await fetch("https://mammal-excited-tarpon.ngrok-free.app/api/natural-area/delete?secret=TallerReact2025!", {
+      const respuesta = await fetch("https://mammal-excited-tarpon.ngrok-free.app/api/natural-area/delete?secret=TallerReact2025!", {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",
@@ -109,8 +100,8 @@ const AreasNaturales = () => {
         body: JSON.stringify({ userId: usuarioLogueado?.id || 1234, naturalAreaId: id })
       });
 
-      if (response.ok) {
-        setAreas((prevAreas) => prevAreas.filter((area) => area.id !== id));
+      if (respuesta.ok) {
+        setAreas((prevAreas) => prevAreas.filter((area) => area.id !== id));  
         alert("Área eliminada con éxito!");
       } else {
         alert("Error al eliminar área.");
@@ -153,6 +144,7 @@ const AreasNaturales = () => {
             id: data.naturalArea.id
           };
 
+          // Se actualiza el estado de `areas`, añadiendo la nueva área al principio del arreglo.
           setAreas((prevAreas) => [nuevaAreaConId, ...prevAreas]);
           alert("Área agregada con éxito!");
           setMostrarFormulario(false);
@@ -190,12 +182,12 @@ const AreasNaturales = () => {
           "Content-Type": "application/json",
           "ngrok-skip-browser-warning": "true"
         },
-        body: JSON.stringify(nuevaArea)
+        body: JSON.stringify(nuevaArea) // se convierte el objeto areaNueva en json para enviarlo
       });
 
       if (response.ok) {
         alert("Área actualizada con éxito!");
-        setMostrarFormulario(false);
+        setMostrarFormulario(false); // oculta el formulario de edicion
         setAreas((prevAreas) =>
           prevAreas.map((a) => (a.id === nuevaArea.id ? nuevaArea : a))
         );
@@ -207,6 +199,7 @@ const AreasNaturales = () => {
     }
   };
 
+  // Maneja la cancelacion del formulario
   const handleCancelar = () => {
     setMostrarFormulario(false);
     setNuevaArea({
@@ -221,6 +214,7 @@ const AreasNaturales = () => {
     });
   };
 
+  
   const handleEnviar = () => {
     if (nuevaArea.id) {
       setAreas(areas.map(area => area.id === nuevaArea.id ? nuevaArea : area));
@@ -284,7 +278,7 @@ const AreasNaturales = () => {
       <div className="d-flex justify-content-center mb-3">
         <button
           className="btn btn-success"
-          onClick={() => setMostrarFormulario(true)}
+          onClick={(agregarArea) => setMostrarFormulario(true)}
         >
           Agregar Nueva Area
         </button>

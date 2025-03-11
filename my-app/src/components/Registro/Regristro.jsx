@@ -4,21 +4,23 @@ import "./Registro.css";
 import logo from "../../images/logodeGuardianesdelEntorno.png";
 
 function Registro() {
-const [usuario, setUsuario] = useState(""); // Estado para el usuario
-const [contrasenia, setContrasenia] = useState(""); // Estado para la contraseña
+const [usuario, setUsuario] = useState(""); 
+const [contrasenia, setContrasenia] = useState(""); 
 const [mensaje, setMensaje] = useState(""); // Estado para el mensaje de éxito
-// Manejo de cambios en los inputs
+
 const CambioValorUsuario = (evento) => {
 setUsuario(evento.target.value);
 };
+
 const CambioValorContrasenia = (evento) => {
 setContrasenia(evento.target.value);
 };
-// Manejo del formulario
+
 const handleSubmit = (evento) => {
 evento.preventDefault();
 setMensaje(`El usuario fue registrado con éxito: ${usuario}`);
 };
+
 return (
     <div>
       <header className="header">

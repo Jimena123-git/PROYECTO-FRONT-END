@@ -5,7 +5,8 @@ import logo from '../../images/logodeGuardianesdelEntorno.png';
 const ActividadesConservacion = () => {
   const [actividades, setActividades] = useState([]);
   const [nuevaActividad, setNuevaActividad] = useState({ description: "", date: "" });
-  
+  const [editandoId, setEditandoId] = useState(null); 
+
   useEffect(() => {
     try {
       const actividadesGuardadas = JSON.parse(localStorage.getItem("actividades")) || [];
@@ -14,7 +15,7 @@ const ActividadesConservacion = () => {
       console.error("Error al cargar las actividades desde localStorage:", error);
     }
   }, []);
-  
+
   useEffect(() => {
     if (actividades.length > 0) {
       try {
@@ -32,24 +33,34 @@ const ActividadesConservacion = () => {
   const agregarActividad = (e) => {
     e.preventDefault();
 
-    if (!nuevaActividad.description.trim() || !nuevaActividad.date) {
+    if (!nuevaActividad.description. trim() || !nuevaActividad.date) {
       alert("Por favor, completa todos los campos.");
       return;
     }
     
-    const fechaHoy = new Date().toISOString().split('T')[0]; // T es simplemente para separar la fecha y la hora
+    const fechaHoy = new Date().toISOString().split('T')[0];
     if (nuevaActividad.date > fechaHoy) {
       alert("La fecha no puede ser en el futuro.");
       return;
     }
 
-    const nueva = {
-      id: Date.now(), 
-      description: nuevaActividad.description.trim(),
-      date: nuevaActividad.date,
-    };
+    if (editandoId !== null) {
+      const actividadesActualizadas = actividades.map((actividad) =>
+        actividad.id === editandoId // busca la actividad con el mismo id que editandoId
+          ? { ...actividad, description: nuevaActividad.description, date: nuevaActividad.date }
+          : actividad
+      );
+      setActividades(actividadesActualizadas);
+      setEditandoId(null); // aca indico que la edicion finalizo 
+    } else {
+      const nueva = {
+        id: Date.now(), 
+        description: nuevaActividad.description.trim(), // Toma la descripción y elimina espacios extra
+        date: nuevaActividad.date,
+      };
+      setActividades([...actividades, nueva]);
+    }
 
-    setActividades((prevActividades) => [...prevActividades, nueva]);
     setNuevaActividad({ description: "", date: "" });
   };
 
@@ -58,40 +69,45 @@ const ActividadesConservacion = () => {
     setActividades(nuevasActividades); 
   };
 
+  const editarActividad = (actividad) => {
+    setNuevaActividad({ description: actividad.description, date: actividad.date });
+    setEditandoId(actividad.id);
+  };
+
   return (
     <div>
       <header className="header">
-        <nav className="navbar navbar-expand-lg">
-          <div className="container-lg">
-            <div className="dropdown">
-              <button
-                className="btn btn-link dropdown-toggle p-0"
-                type="button"
-                id="logoDropdown"
-                data-bs-toggle="dropdown"
-                aria-expanded="false"
-              >
-                <img
-                  className="Logo"
-                  id="logo"
-                  src={logo}
-                  alt="Logo de Guardianes del Entorno"
-                  style={{ width: "50px", height: "50px" }}
-                />
-              </button>
-              <ul className="dropdown-menu" aria-labelledby="logoDropdown">
-                <li><Link className="dropdown-item" to="/">Inicio</Link></li>
-                <li><Link className="dropdown-item" to="/areasnaturales">Áreas Naturales</Link></li>
-                <li><Link className="dropdown-item" to="/especiesavistadas">Especies Avistadas</Link></li>
-                <li><Link className="dropdown-item" to="/actividadesconservacion">Actividades Conservación</Link></li>
-                <li><Link className="dropdown-item" to="/registro">Registrarse</Link></li>
-                <li><Link className="dropdown-item" to="/iniciarsesion">Iniciar Sesion</Link></li>
-              </ul>
-            </div>
-          </div>
-        </nav>
-      </header>
-
+              <nav className="navbar navbar-expand-lg">
+                <div className="container-lg">
+                  <div className="dropdown">
+                    <button
+                      className="btn btn-link dropdown-toggle p-0"
+                      type="button"
+                      id="logoDropdown"
+                      data-bs-toggle="dropdown"
+                      aria-expanded="false"
+                    >
+                      <img
+                        className="Logo"
+                        id="logo"
+                        src={logo}
+                        alt="Logo de Guardianes del Entorno"
+                        style={{ width: "50px", height: "50px" }}
+                      />
+                      </button>
+                      <ul className="dropdown-menu" aria-labelledby="logoDropdown">
+                      <li><Link className="dropdown-item" to="/">Inicio</Link></li>
+                      <li><Link className="dropdown-item" to="/areasnaturales">Áreas Naturales</Link></li>
+                      <li><Link className="dropdown-item" to="/especiesavistadas">Especies Avistadas</Link></li>
+                      <li><Link className="dropdown-item" to="/actividadesconservacion">Actividades Conservación</Link></li>
+                      <li><Link className="dropdown-item" to="/registro">Registrarse</Link></li>
+                      <li><Link className="dropdown-item" to="/iniciarsesion">Iniciar Sesion</Link></li>
+                    </ul>
+                  </div>
+                </div>
+              </nav>
+            </header>
+      
       <h1 className="titulo-principal text-center">Actividades de Conservación</h1>
 
       {/* Formulario */}
@@ -121,9 +137,9 @@ const ActividadesConservacion = () => {
 
         <button
           type="submit"
-          className="btn btn-success w-100"
+          className={`btn ${editandoId ? "btn-warning" : "btn-success"} w-100`}
         >
-         Agregar Actividad
+          {editandoId ? "Guardar Cambios" : "Agregar Actividad"}
         </button>
       </form>
 
@@ -138,9 +154,14 @@ const ActividadesConservacion = () => {
                 <p className="fw-bold text-dark">{actividad.description}</p>
                 <p className="text-muted">{actividad.date}</p>
               </div>
-              <button
-                onClick={() => eliminarActividad(actividad.id)}
-                className="btn btn-danger">Eliminar </button>
+              <div>
+                <button
+                  onClick={() => editarActividad(actividad)}
+                  className="btn btn-warning mx-2">Editar</button>
+                <button
+                  onClick={() => eliminarActividad(actividad.id)}
+                  className="btn btn-danger">Eliminar</button>
+              </div>
             </div>
           ))
         )}

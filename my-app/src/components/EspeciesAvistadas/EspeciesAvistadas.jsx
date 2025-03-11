@@ -63,7 +63,7 @@ const EspeciesAvistadas = () => {
     }
   }, [usuarioLogueado]);
 
-  const handleChange = (e) => {
+  const handleChange = (e) => { // cada vez que el usuario escribe en un campo de formulario 
     setNuevaEspecie({
       ...nuevaEspecie,
       [e.target.name]: e.target.value
@@ -183,7 +183,7 @@ const EspeciesAvistadas = () => {
   
       if (response.ok) {
         setMensaje("¡Especie eliminada correctamente!");
-        setEspecies(especies.filter((especie) => especie.id !== id)); // Actualiza el estado eliminando la especie
+        setEspecies(especies.filter((especie) => especie.id !== id)); 
       } else {
         setMensaje("Error al eliminar la especie.");
       }
